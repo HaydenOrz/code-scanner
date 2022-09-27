@@ -1,0 +1,60 @@
+{
+	"compilerOptions": {
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"target": "esnext",
+		"module": "esnext",
+		"lib": [
+			"esnext"
+		],
+		"allowJs": true,
+		"checkJs": true,
+		"jsx": "react-jsx",
+		"declaration": true,
+		"sourceMap": true,
+		"noEmit": true,
+		"importHelpers": true,
+		"isolatedModules": true,
+		"esModuleInterop": true,
+		"preserveConstEnums": true,
+		"strict": true,
+		"noImplicitAny": false,
+		"strictNullChecks": true,
+		"noImplicitThis": true,
+		"alwaysStrict": true,
+		"strictPropertyInitialization": false,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noImplicitReturns": false,
+		"noFallthroughCasesInSwitch": false,
+		"moduleResolution": "node",
+		"baseUrl": "./", 
+		"rootDirs": [],
+		"typeRoots": [
+			"**/node_modules/@types",
+			"./src/typings"
+		],
+		"types": ["node"],
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true,
+		"sourceRoot": "./", 
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+        "paths": {
+            "@/*": ["src/*"],
+            "module": ["src/module/*"]
+        },
+	},
+    "exclude": ["node_modules", "dist", "src/**/*.md", "mock"],
+    "include": ["src/**/*", "mock/mock-need-try-catch.tsx"],
+	"ts-node": {
+		"esm": true,
+        "files": true,
+		"compilerOptions": {
+            "paths": {
+                "@/*": ["src/*"],
+                "module": ["src/module/*"]
+            },
+        }
+	},
+}
