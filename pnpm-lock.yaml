@@ -8,10 +8,7 @@ specifiers:
   '@types/babel__core': ^7.1.19
   '@types/babel__helper-plugin-utils': ^7.10.0
   '@types/node': ^17.0.21
-  esquery: ^1.4.0
   fast-glob: ^3.2.11
-  globby: ^13.1.1
-  install: ^0.13.0
   ts-node: ^10.7.0
   tslib: ^2.3.1
   typescript: ^4.6.2
@@ -21,10 +18,7 @@ dependencies:
   '@babel/helper-plugin-utils': registry.npmmirror.com/@babel/helper-plugin-utils/7.18.9
   '@babel/parser': registry.npmmirror.com/@babel/parser/7.18.13
   '@babel/types': registry.npmmirror.com/@babel/types/7.18.13
-  esquery: registry.npmmirror.com/esquery/1.4.0
   fast-glob: registry.npmmirror.com/fast-glob/3.2.11
-  globby: registry.npmmirror.com/globby/13.1.2
-  install: registry.npmmirror.com/install/0.13.0
 
 devDependencies:
   '@types/babel__core': registry.npmmirror.com/@types/babel__core/7.1.19
@@ -571,15 +565,6 @@ packages:
     engines: {node: '>=0.3.1'}
     dev: true
 
-  registry.npmmirror.com/dir-glob/3.0.1:
-    resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dir-glob/-/dir-glob-3.0.1.tgz}
-    name: dir-glob
-    version: 3.0.1
-    engines: {node: '>=8'}
-    dependencies:
-      path-type: registry.npmmirror.com/path-type/4.0.0
-    dev: false
-
   registry.npmmirror.com/electron-to-chromium/1.4.235:
     resolution: {integrity: sha512-eNU2SmVZYTzYVA5aAWmhAJbdVil5/8H5nMq6kGD0Yxd4k2uKIuT8YmS46I0QXY7iOoPPcb6jjem9/2xyuH5+XQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/electron-to-chromium/-/electron-to-chromium-1.4.235.tgz}
     name: electron-to-chromium
@@ -598,22 +583,6 @@ packages:
     name: escape-string-regexp
     version: 1.0.5
     engines: {node: '>=0.8.0'}
-    dev: false
-
-  registry.npmmirror.com/esquery/1.4.0:
-    resolution: {integrity: sha512-cCDispWt5vHHtwMY2YrAQ4ibFkAL8RbH5YGBnZBc90MolvvfkkQcJro/aZiAQUlQ3qgrYS6D6v8Gc5G5CQsc9w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/esquery/-/esquery-1.4.0.tgz}
-    name: esquery
-    version: 1.4.0
-    engines: {node: '>=0.10'}
-    dependencies:
-      estraverse: registry.npmmirror.com/estraverse/5.3.0
-    dev: false
-
-  registry.npmmirror.com/estraverse/5.3.0:
-    resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/estraverse/-/estraverse-5.3.0.tgz}
-    name: estraverse
-    version: 5.3.0
-    engines: {node: '>=4.0'}
     dev: false
 
   registry.npmmirror.com/fast-glob/3.2.11:
@@ -669,38 +638,11 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  registry.npmmirror.com/globby/13.1.2:
-    resolution: {integrity: sha512-LKSDZXToac40u8Q1PQtZihbNdTYSNMuWe+K5l+oa6KgDzSvVrHXlJy40hUP522RjAIoNLJYBJi7ow+rbFpIhHQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/globby/-/globby-13.1.2.tgz}
-    name: globby
-    version: 13.1.2
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dependencies:
-      dir-glob: registry.npmmirror.com/dir-glob/3.0.1
-      fast-glob: registry.npmmirror.com/fast-glob/3.2.11
-      ignore: registry.npmmirror.com/ignore/5.2.0
-      merge2: registry.npmmirror.com/merge2/1.4.1
-      slash: registry.npmmirror.com/slash/4.0.0
-    dev: false
-
   registry.npmmirror.com/has-flag/3.0.0:
     resolution: {integrity: sha512-sKJf1+ceQBr4SMkvQnBDNDtf4TXpVhVGateu0t918bl30FnbE2m4vNLX+VWe/dpjlb+HugGYzW7uQXH98HPEYw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/has-flag/-/has-flag-3.0.0.tgz}
     name: has-flag
     version: 3.0.0
     engines: {node: '>=4'}
-    dev: false
-
-  registry.npmmirror.com/ignore/5.2.0:
-    resolution: {integrity: sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ignore/-/ignore-5.2.0.tgz}
-    name: ignore
-    version: 5.2.0
-    engines: {node: '>= 4'}
-    dev: false
-
-  registry.npmmirror.com/install/0.13.0:
-    resolution: {integrity: sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/install/-/install-0.13.0.tgz}
-    name: install
-    version: 0.13.0
-    engines: {node: '>= 0.10'}
     dev: false
 
   registry.npmmirror.com/is-extglob/2.1.1:
@@ -783,13 +725,6 @@ packages:
     version: 2.0.6
     dev: false
 
-  registry.npmmirror.com/path-type/4.0.0:
-    resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/path-type/-/path-type-4.0.0.tgz}
-    name: path-type
-    version: 4.0.0
-    engines: {node: '>=8'}
-    dev: false
-
   registry.npmmirror.com/picocolors/1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/picocolors/-/picocolors-1.0.0.tgz}
     name: picocolors
@@ -835,13 +770,6 @@ packages:
     name: semver
     version: 6.3.0
     hasBin: true
-    dev: false
-
-  registry.npmmirror.com/slash/4.0.0:
-    resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/slash/-/slash-4.0.0.tgz}
-    name: slash
-    version: 4.0.0
-    engines: {node: '>=12'}
     dev: false
 
   registry.npmmirror.com/supports-color/5.5.0:

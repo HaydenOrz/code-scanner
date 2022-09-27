@@ -15,10 +15,7 @@
         "@babel/helper-plugin-utils": "^7.18.9",
         "@babel/parser": "^7.18.13",
         "@babel/types": "^7.17.0",
-        "esquery": "^1.4.0",
-        "fast-glob": "^3.2.11",
-        "globby": "^13.1.1",
-        "install": "^0.13.0"
+        "fast-glob": "^3.2.11"
     },
     "devDependencies": {
         "@types/babel__core": "^7.1.19",
