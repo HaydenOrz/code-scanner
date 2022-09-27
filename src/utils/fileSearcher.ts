@@ -25,22 +25,22 @@ export const Automaton: AutomatonType = {
 };
 
 export type Pattern = string;
-
-export type PatternsGroup = Pattern[]
-
+export type PatternsGroup = Pattern[];
+export type Includes = Pattern | Pattern[];
+export type Excludes = Pattern[];
 export type FileResult = {
     path: string;
-    plugins: ParserPlugin[]
+    parsePlugins: ParserPlugin[]
 }[]
 
 class FileSearcher {
-    constructor (includes: Pattern | Pattern[], excludes?: Pattern[]) {
+    constructor (includes: Includes, excludes?: Excludes) {
         this.patterns = includes
         this.ignorePatterns = excludes
     }
-    private patterns: Pattern | Pattern[];
-    private ignorePatterns: Pattern[] | undefined;
-    private filesPath: string []
+    private patterns: Includes;
+    private ignorePatterns: Excludes;
+    private filesPaths: string [];
 
     private matchFiles() {
         const filesPath = fastGlob
@@ -49,18 +49,18 @@ class FileSearcher {
                 { ignore: this.ignorePatterns, dot: true, absolute: true }
             )
             .map(normalize)
-        this.filesPath = filesPath
+        this.filesPaths = filesPath
     }
 
-    private getFilePlugins(filePath): ParserPlugin[] {
+    private getFilePlugins(filePath: string): ParserPlugin[] {
         const fileExtName: keyof typeof Automaton = extname(filePath)
         return Automaton[fileExtName] ?? []
     }
 
     private combineFileAndPlugins(): FileResult {
-        return this.filesPath.map(filePath => ({
+        return this.filesPaths.map(filePath => ({
             path: filePath,
-            plugins: this.getFilePlugins(filePath)
+            parsePlugins: this.getFilePlugins(filePath)
         }))
     }
 
