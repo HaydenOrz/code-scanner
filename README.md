@@ -1,7 +1,7 @@
 # code-scanner
 > 扫描可能会导致错误的代码
 
-> 基于 Typescrit 和 Babel
+> 基于 TypeScrit 和 Babel
 
 ## 为什么不是 ESlint 插件？
 ESlint 通常直接嵌入到项目中，在项目进行的过程中 ESlint 报错可能会阻塞项目的流程，比如合并代码前在 CI 中运行 ESlint 来检查代码是否有明显错误。
