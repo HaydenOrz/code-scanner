@@ -1,4 +1,4 @@
-# code-scanner
+# Code Scanner
 > 扫描可能会导致错误的代码
 
 > 基于 TypeScrit 和 Babel
