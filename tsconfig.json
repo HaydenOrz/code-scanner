@@ -1,33 +1,28 @@
 {
 	"compilerOptions": {
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
 		"target": "esnext",
 		"module": "esnext",
 		"lib": [
-			"esnext"
+			"esnext",
 		],
+		"noEmit": true,
+		"strict": true,
+		"noImplicitAny": false,
+		"strictNullChecks": false,
+		"sourceMap": true,
+		"skipLibCheck": true, // ignore check *.d.ts
 		"allowJs": true,
 		"checkJs": true,
 		"jsx": "react-jsx",
-		"declaration": true,
-		"sourceMap": true,
-		"noEmit": true,
-		"importHelpers": true,
-		"isolatedModules": true,
-		"esModuleInterop": true,
-		"preserveConstEnums": true,
-		"strict": true,
-		"noImplicitAny": false,
-		"strictNullChecks": true,
-		"noImplicitThis": true,
-		"alwaysStrict": true,
-		"strictPropertyInitialization": false,
-		"noUnusedLocals": false,
-		"noUnusedParameters": false,
-		"noImplicitReturns": false,
-		"noFallthroughCasesInSwitch": false,
+		"declaration": true, // generate *.d.ts
+		"importHelpers": true, // import helpers from tslib, e.g. __extends、__rest
 		"moduleResolution": "node",
+		"isolatedModules": true, // Treat each file as a module
+		"esModuleInterop": true,
+		"resolveJsonModule": true, // allow resolve json module
+		"allowSyntheticDefaultImports": true, 
+		"preserveConstEnums": true,
+		"forceConsistentCasingInFileNames": true,
 		"baseUrl": "./", 
 		"rootDirs": [],
 		"typeRoots": [
@@ -35,18 +30,14 @@
 			"./src/typings"
 		],
 		"types": ["node"],
-		"allowSyntheticDefaultImports": true,
-		"skipLibCheck": true,
 		"sourceRoot": "./", 
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
         "paths": {
             "@/*": ["src/*"],
             "module": ["src/module/*"]
         },
 	},
-    "exclude": ["node_modules", "dist", "src/**/*.md", "mock"],
-    "include": ["src/**/*", "mock/mock-need-try-catch.tsx"],
+    "exclude": ["node_modules", "dist", "src/**/*.md", "mock/**"],
+    "include": ["src/**/*"],
 	"ts-node": {
 		"esm": true,
         "files": true,
