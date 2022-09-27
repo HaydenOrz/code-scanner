@@ -2,6 +2,9 @@ import t from '@babel/types'
 import type { NodePath } from '@babel/traverse'
 import { declare } from '@babel/helper-plugin-utils';
 
+export interface NeedTryCatchOptions {
+    sourceFilePath: string;
+}
 
 const isBoundary = (path: NodePath<t.Node>) => {
     return (path.isFunctionDeclaration()
@@ -26,7 +29,7 @@ const hasErrorCapture = (path: NodePath<t.CallExpression>) => {
 }
 
 
-const needTryCatch = declare((api, options, dirname) => {
+const needTryCatch = declare((api, options: NeedTryCatchOptions, dirname) => {
     api.assertVersion(7);   
     return {
         pre() {
