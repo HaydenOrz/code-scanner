@@ -1,11 +1,12 @@
 import { transformSync } from '@babel/core'
+import type { ParserPlugin } from '@babel/parser';
 import { readFileSync } from 'fs';
 import FileSearcher, { Includes, Excludes, FileResult } from '../utils/fileSearcher.js';
 import needTryCatch, { NeedTryCatchOptions } from '../plugins/need-try-catch-plugin.js';
 import dangerousAndOperator, { DangerousAndOperatorOptions } from '../plugins/dangerous-and-operator.js';
 import needHandlerInCatch, { NeedHandlerInCatchOptions } from '../plugins/need-handler-in-catch-block.js'
 
-export type PluginsConf = 
+export type ScanPluginsConf = 
 { plugin: 'needTryCatch', options?:Omit<NeedTryCatchOptions, 'sourceFilePath'> }
 | { plugin: 'dangerousAndOperator', options?:Omit<DangerousAndOperatorOptions, 'sourceFilePath'> }
 | { plugin: 'needHandlerInCatch', options?:Omit<NeedHandlerInCatchOptions, 'sourceFilePath'> }
@@ -13,7 +14,9 @@ export type PluginsConf =
 export interface Options {
     includes: Includes;
     excludes?: Excludes;
-    plugins: PluginsConf[];
+    scanPlugins: ScanPluginsConf[];
+    babelParsePlugins?: ParserPlugin[];
+    fileEncoding?: BufferEncoding;
 }
 
 const pluginsMap = {
@@ -24,22 +27,18 @@ const pluginsMap = {
 
 export default class Runner {
     constructor (options: Options) {
-        const { includes, excludes, plugins } = options
-        this._includes = includes;
-        this._excludes = excludes;
-        this._plugins = plugins;
+        this._options = options
     }
-    private _includes: Includes;
-    private _excludes: Excludes;
-    private _plugins: PluginsConf[];
+    private _options: Options;
     private _fileMeta: FileResult;
 
     private _getFileMeta () {
-        const fileSearcher = new FileSearcher(this._includes, this._excludes)
+        const { includes, excludes } = this._options
+        const fileSearcher = new FileSearcher(includes, excludes)
         this._fileMeta = fileSearcher.run()
     }
 
-    private _getBabelPlugins  (plugins: PluginsConf[], sourceFilePath) {
+    private _getBabelPlugins  (plugins: ScanPluginsConf[], sourceFilePath: string) {
         return plugins.map(({ plugin, options }) => {
             return pluginsMap[plugin]
                 ? [
@@ -51,19 +50,23 @@ export default class Runner {
     }
 
     private _begin () {
+        const { scanPlugins, babelParsePlugins, fileEncoding } = this._options
         this._fileMeta.forEach(({path, parsePlugins}) => {
+
             const fileContent = readFileSync(path, {
-                encoding: 'utf8',
+                encoding: fileEncoding ?? 'utf8',
             });
+
             transformSync(fileContent, {
-                plugins: this._getBabelPlugins(this._plugins, path),
+                plugins: this._getBabelPlugins(scanPlugins, path),
                 parserOpts: {
                     sourceType: 'unambiguous',
-                    plugins: [
+                    plugins: Array.from(new Set([
                         ...parsePlugins,
                         "decorators-legacy",
-                        "decoratorAutoAccessors"
-                    ]
+                        "decoratorAutoAccessors",
+                        ...babelParsePlugins,
+                    ])) 
                 },
                 code: false,
                 comments: false,

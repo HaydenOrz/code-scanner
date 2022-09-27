@@ -7,7 +7,7 @@ const pattern = './mock/mock-handler-in-catch-block.tsx'
 
 const runner = new Runner({
     includes: pattern,
-    plugins: [
+    scanPlugins: [
         {
             plugin: 'needHandlerInCatch',
             options: {
