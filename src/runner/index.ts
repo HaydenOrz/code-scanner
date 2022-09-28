@@ -12,10 +12,25 @@ export type ScanPluginsConf =
 | { plugin: 'needHandlerInCatch', options?: NeedHandlerInCatchOptions }
 
 export interface Options {
+    /**
+     * The files you want to scan
+     */
     includes: Includes;
+     /**
+     * The files you want to ignore
+     */
     excludes?: Excludes;
+    /**
+     * The scanning plugin you want to use
+     */
     scanPlugins: ScanPluginsConf[];
+    /**
+     * babel parse plugin
+     */
     babelParsePlugins?: ParserPlugin[];
+    /**
+     * The file encoding format
+     */
     fileEncoding?: BufferEncoding;
 }
 
