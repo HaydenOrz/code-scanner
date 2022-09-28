@@ -9,12 +9,15 @@ const pattern = '../dt-works/dt-batch-works/src/**/*.(tsx|js)'
 const runner = new Runner({
     includes: pattern,
     scanPlugins: [
-        // {
-        //     plugin: 'needHandlerInCatch',
-        //     options: {
-        //         reactImportPath: 'react'
-        //     }
-        // },
+        {
+            plugin: 'needTryCatch'
+        },
+        {
+            plugin: 'needHandlerInCatch',
+            options: {
+                reactImportPath: 'react'
+            }
+        },
         {
             plugin: 'dangerousAndOperator'
         }
