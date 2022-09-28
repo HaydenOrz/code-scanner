@@ -39,37 +39,53 @@
  * 4. jsx 元素的属性
  * 5. jsx 内部花括号渲染
  * 6. 函数返回值 （箭头函数简写）
+ * 7. 函数参数
  */
 
 
-function fn (_t) {}
+const res = {
+    data: [],
+    a: {
+        b: {
+            c: 1
+        }
+    },
+    disable: true
+}
+const isFirstSource = type === DATA_SOURCE.MYSQL && (sourceKeyIndex === 0 || sourceKeyIndex === -1)
+const { a: { b: { c } } } = res
+const foo = c && res.data
 
-const condition1 = false
-const condition2 = true
-
-// eg.1
-const temp = condition1 && condition2
-
-// eg.2
 const obj = {
-    name: condition1 && 'hayden'
+    a: {
+        b: res.a.b.c.d && res.data
+    }
+}
+const arr = [res.data && res]
+
+const arr1 = [res.data.length && res]
+
+function App () {
+    return (
+        <>
+            {
+                res && <span></span>
+            }
+            {
+                res.data.length && <span></span>
+            }
+            <div style={ res && {} }>
+
+            </div>
+        </>
+    )
 }
 
-// eg.3
-const arr = [ condition1 && 1 ]
-
-// eg.4
-function getSomething () {
-    return condition1 && []
+function bar () {
+    return res && res.data
 }
 
-// eg.5
-fn(condition2 && 'aa')
-
-// eg.6
-fn({
-    age: condition2 && 10
-})
+bar(res && res.data)
 
 
 

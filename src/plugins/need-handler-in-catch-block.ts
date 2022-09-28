@@ -2,7 +2,6 @@ import t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
 
 export interface NeedHandlerInCatchOptions {
-    sourceFilePath: string;
     reactImportPath?: string;
 }
 
@@ -25,7 +24,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                     const { end: { line, column } } = (node.loc as t.SourceLocation)
                     const tmp = Error.stackTraceLimit;
                     Error.stackTraceLimit = 0;
-                    errors.push(path.buildCodeFrameError(`${options.sourceFilePath}(${line},${column}) Should handle error in catch block`, Error));
+                    errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) Should handle error in catch block`, Error));
                     Error.stackTraceLimit = tmp;
                 }
             },
@@ -51,7 +50,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                     const { end: { line, column } } = (node.loc as t.SourceLocation)
                     const tmp = Error.stackTraceLimit;
                     Error.stackTraceLimit = 0;
-                    errors.push(path.buildCodeFrameError(`${options.sourceFilePath}(${line},${column}) Should handle error in catch block`, Error));
+                    errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) Should handle error in catch block`, Error));
                     Error.stackTraceLimit = tmp;
                 }
             },
@@ -73,7 +72,6 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                             }
 
                             if(path.scope.hasBinding(superClassIdentifier)) {
-                                debugger
                                 const binding = path.scope.getBinding(superClassIdentifier);
                                 /**
                                  * Currently only compatible with Specification ESM
@@ -84,7 +82,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                                         const { end: { line, column } } = (node.loc as t.SourceLocation)
                                         const tmp = Error.stackTraceLimit;
                                         Error.stackTraceLimit = 0;
-                                        errors.push(path.buildCodeFrameError(`${options.sourceFilePath}(${line},${column}) Should handle error in catch block`, Error));
+                                        errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) Should handle error in catch block`, Error));
                                         Error.stackTraceLimit = tmp;
                                     }
                                 }

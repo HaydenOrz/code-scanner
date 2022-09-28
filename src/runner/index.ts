@@ -7,9 +7,9 @@ import dangerousAndOperator, { DangerousAndOperatorOptions } from '../plugins/da
 import needHandlerInCatch, { NeedHandlerInCatchOptions } from '../plugins/need-handler-in-catch-block.js'
 
 export type ScanPluginsConf = 
-{ plugin: 'needTryCatch', options?:Omit<NeedTryCatchOptions, 'sourceFilePath'> }
-| { plugin: 'dangerousAndOperator', options?:Omit<DangerousAndOperatorOptions, 'sourceFilePath'> }
-| { plugin: 'needHandlerInCatch', options?:Omit<NeedHandlerInCatchOptions, 'sourceFilePath'> }
+{ plugin: 'needTryCatch', options?: NeedTryCatchOptions }
+| { plugin: 'dangerousAndOperator', options?: DangerousAndOperatorOptions }
+| { plugin: 'needHandlerInCatch', options?: NeedHandlerInCatchOptions }
 
 export interface Options {
     includes: Includes;
@@ -41,18 +41,16 @@ export default class Runner {
     private _getBabelPlugins  (plugins: ScanPluginsConf[], sourceFilePath: string) {
         return plugins.map(({ plugin, options }) => {
             return pluginsMap[plugin]
-                ? [
-                    pluginsMap[plugin],
-                    { ...options, sourceFilePath }
-                ] 
+                ? [ pluginsMap[plugin], { ...options, sourceFilePath } ] 
                 : null
         }).filter(Boolean)
     }
 
     private _begin () {
-        const { scanPlugins, babelParsePlugins, fileEncoding } = this._options
-        this._fileMeta.forEach(({path, parsePlugins}) => {
+        const { scanPlugins, babelParsePlugins = [], fileEncoding } = this._options
+        if(!scanPlugins?.length) return
 
+        this._fileMeta.forEach(({path, parsePlugins}) => {
             const fileContent = readFileSync(path, {
                 encoding: fileEncoding ?? 'utf8',
             });
@@ -82,31 +80,3 @@ export default class Runner {
         this._begin();
     }
 }
-
-// export default function run (options: Options) {
-//     const { includes, excludes, plugins } = options
-//     const fileSearcher = new FileSearcher(includes, excludes)
-//     const fileMeta = fileSearcher.run()
-
-//     fileMeta.forEach(({path, parsePlugins}) => {
-//         const fileContent = readFileSync(path, {
-//             encoding: 'utf8',
-//         });
-//         transformSync(fileContent, {
-//             plugins: getBabelPlugins(plugins, path),
-//             parserOpts: {
-//                 sourceType: 'unambiguous',
-//                 plugins: [
-//                     ...parsePlugins,
-//                     "decorators-legacy",
-//                     "decoratorAutoAccessors"
-//                 ]
-//             },
-//             code: false,
-//             comments: false,
-//             filename: path,
-//             sourceFileName: path,
-//             highlightCode: true
-//         });
-//     })
-// }

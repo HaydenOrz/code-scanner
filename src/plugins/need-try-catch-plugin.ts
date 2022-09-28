@@ -1,9 +1,8 @@
 import t from '@babel/types'
-import type { NodePath } from '@babel/traverse'
+import type { NodePath } from '@babel/core'
 import { declare } from '@babel/helper-plugin-utils';
 
 export interface NeedTryCatchOptions {
-    sourceFilePath: string;
 }
 
 const isBoundary = (path: NodePath<t.Node>) => {
@@ -45,9 +44,8 @@ const needTryCatch = declare((api, options: NeedTryCatchOptions, dirname) => {
                         if(!hasErrorCapture(path)) {
                             const { end: { line, column } } = (node.loc as t.SourceLocation)
                             const tmp = Error.stackTraceLimit;
-                            debugger
                             Error.stackTraceLimit = 0;
-                            errors.push(path.buildCodeFrameError(`${options.sourceFilePath}(${line},${column}) Should be wrapped by try-catch`, Error));
+                            errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) Should be wrapped by try-catch`, Error));
                             Error.stackTraceLimit = tmp;
                         }
                     }
