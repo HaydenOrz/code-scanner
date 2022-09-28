@@ -127,7 +127,7 @@ const options = {
 
 ### dangerousAndOperator
 在某些情况下，使用 `&&` 语句作为值是一个危险操作
-> PS: 绝大部份情况下，如果代码有完整的 TS 类型定义，是不会出现这种情况的
+> PS: 绝大部份情况下，如果代码有完整的 TS 类型定义，是不会有问题的
 #### Case
 1. setState 更新状态
 ```js
