@@ -45,7 +45,7 @@ const needTryCatch = declare((api, options: NeedTryCatchOptions, dirname) => {
                             const { end: { line, column } } = (node.loc as t.SourceLocation)
                             const tmp = Error.stackTraceLimit;
                             Error.stackTraceLimit = 0;
-                            errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) Should be wrapped by try-catch`, Error));
+                            errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) \n>>>>>tips: Should be wrapped by try-catch<<<<<`, Error));
                             Error.stackTraceLimit = tmp;
                         }
                     }
@@ -55,7 +55,7 @@ const needTryCatch = declare((api, options: NeedTryCatchOptions, dirname) => {
 
         post() {
             this.get('errors').forEach(err => {
-                console.error(err, '\n');
+                console.log(err, '\n');
             });
         }
     }

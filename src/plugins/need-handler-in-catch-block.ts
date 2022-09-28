@@ -82,7 +82,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                                         const { end: { line, column } } = (node.loc as t.SourceLocation)
                                         const tmp = Error.stackTraceLimit;
                                         Error.stackTraceLimit = 0;
-                                        errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) Should handle error in catch block`, Error));
+                                        errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) \n >>>>>tips: Should handle error in catch block<<<<<`, Error));
                                         Error.stackTraceLimit = tmp;
                                     }
                                 }
@@ -96,7 +96,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
 
         post() {
             this.get('errors').forEach(err => {
-                console.error(err, '\n');
+                console.log(err, '\n');
             });
         }
     }

@@ -67,7 +67,7 @@ const dangerousAndOperator = declare((api, options: DangerousAndOperatorOptions)
                     const { end: { line, column } } = (node.loc as t.SourceLocation)
                     const tmp = Error.stackTraceLimit;
                     Error.stackTraceLimit = 0;
-                    errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) The value of this expression may not be as expected`, Error));
+                    errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column})\n >>>>>tips: The value of this expression may not be as expected<<<<<`, Error));
                     Error.stackTraceLimit = tmp;
                 }
             },
@@ -75,7 +75,7 @@ const dangerousAndOperator = declare((api, options: DangerousAndOperatorOptions)
 
         post() {
             this.get('errors').forEach(err => {
-                console.error(err, '\n');
+                console.log(err, '\n');
             });
         }
     }
