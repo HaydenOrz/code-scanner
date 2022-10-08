@@ -13,6 +13,8 @@ dist/
 
 # production
 /build
+/lib
+/esm
 
 # misc
 .DS_Store

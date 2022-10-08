@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "ts-node ./src/index.ts"
+        "dev": "ts-node ./src/index.ts",
+        "compile": "rm -rf ./esm/** && tsc -p ./tsconfig.esm.json"
     },
     "type": "module",
     "keywords": [],
