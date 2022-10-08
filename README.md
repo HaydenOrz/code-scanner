@@ -10,7 +10,7 @@ ESlint 通常直接嵌入到项目中，在项目进行的过程中 ESlint 报�
 ## 使用
 1. 下载
 ```shell
-git@github.com:HaydenOrz/code-scanner.git
+git clone git@github.com:HaydenOrz/code-scanner.git
 ```
 2. 安装依赖
 ```shell
@@ -23,13 +23,13 @@ new Runner({
     includes: pattern, // 想要扫描的文件，glob 模式
     scanPlugins: [ // 扫描插件
         {
-            plugin: 'needTryCatch'
-        },
-        {
             plugin: 'needHandlerInCatch', // 插件名称
-            options: { // 插件配置
+            options: { // 插件参数配置
                 reactImportPath: 'react'
             }
+        },
+        {
+            plugin: 'needTryCatch'
         },
         {
             plugin: 'dangerousAndOperator'
@@ -38,6 +38,7 @@ new Runner({
 })
 ```
 更多配置可以看一下 `src/runner/index.ts` 中的 ts 类型定义
+
 4. 运行
 ```shell
 pnpm dev
@@ -89,7 +90,7 @@ foo()
 ### needHandlerInCatch
 在异常捕获代码块中，必须要有处理异常情况的代码，原因是：
 1. 如果没有处理异常情况，那么当程序产生异常时，可能有不可预知的 bug；
-2. 在生产环境中，通常没有 sourceMap，此时如果异常没有处理也没有打印出来，当程序产生 bug 时，难以定位问题所在；
+2. 在生产环境中，通常没有 sourceMap，如果既没有处理异常也没有在控制台中打印，当程序产生 bug 时，难以定位问题所在；
 
 #### Case
 1. try...catch...
@@ -119,7 +120,7 @@ class App extends React.Component {
 #### 插件配置
 ```js
 const options = {
-  reactImportFile: sring; // react 包引入路径，默认是 react
+  reactImportFile: string; // react 包引入路径，默认是 'react'
 }
 ```
 
