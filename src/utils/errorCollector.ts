@@ -62,10 +62,15 @@ export default class ErrorCollector {
 
     printCodeErrors = () => {
         this._errorPool.forEach((type, { pluginTips, filePath, loc, codeFrameErrMsg }) => {
-            console.log(chalk.redBright('Error: ' + pluginTips +` at`))
-            console.log(chalk.greenBright(filePath + `(${loc.line}, ${loc.column + 1})`))
+            
+            console.log(
+                chalk.cyan(filePath),
+                chalk.yellow(`(${loc.line}, ${loc.column + 1})`),
+                chalk.redBright('Error:'),
+                chalk.gray(pluginTips)
+            )
             console.log(codeFrameErrMsg);
-            console.log('\n\n');
+            console.log('\n');
         })
     }
 }
