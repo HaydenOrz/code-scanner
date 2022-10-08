@@ -1,16 +1,17 @@
 {
     "name": "code-scanner",
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "description": "scan js|ts|jsx|tsx code",
+    "type": "module",
+    "author": "Hayden",
+    "main": "esm/index.js",
+    "module": "esm/index.js",
+    "keywords": ["babel", "typescript", "lint", "scan code"],
+    "license": "ISC",
     "scripts": {
         "dev": "ts-node ./src/index.ts",
         "compile": "rm -rf ./esm/** && tsc -p ./tsconfig.esm.json"
     },
-    "type": "module",
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
     "dependencies": {
         "@babel/code-frame": "^7.18.6",
         "@babel/core": "^7.15.0",
