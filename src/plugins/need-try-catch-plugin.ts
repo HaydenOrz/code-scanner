@@ -1,8 +1,11 @@
 import t from '@babel/types'
 import type { NodePath } from '@babel/core'
 import { declare } from '@babel/helper-plugin-utils';
+import ErrorCollector, { ErrorType } from '../utils/errorCollector.js'
+
 
 export interface NeedTryCatchOptions {
+    errorCollector: ErrorCollector
 }
 
 const isBoundary = (path: NodePath<t.Node>) => {
@@ -31,33 +34,19 @@ const hasErrorCapture = (path: NodePath<t.CallExpression>) => {
 const needTryCatch = declare((api, options: NeedTryCatchOptions, dirname) => {
     api.assertVersion(7);   
     return {
-        pre() {
-            this.set('errors', []);
-        },
-
         visitor: {
             CallExpression(path, state) {
+                const { errorCollector } = options
                 const { node } = path
-                const errors = state.get('errors');
                 if ( t.isMemberExpression(node.callee) && t.isIdentifier(node.callee.object) && t.isIdentifier(node.callee.property) ) {
                     if (node.callee.object.name === 'JSON' && node.callee.property.name === 'parse') {
                         if(!hasErrorCapture(path)) {
-                            const { end: { line, column } } = (node.loc as t.SourceLocation)
-                            const tmp = Error.stackTraceLimit;
-                            Error.stackTraceLimit = 0;
-                            errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) \n>>>>>tips: Should be wrapped by try-catch<<<<<`, Error));
-                            Error.stackTraceLimit = tmp;
+                            errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needTryCatch)
                         }
                     }
                 }
             },
         },
-
-        post() {
-            this.get('errors').forEach(err => {
-                console.log(err, '\n');
-            });
-        }
     }
 })
 

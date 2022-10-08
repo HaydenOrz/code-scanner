@@ -1,7 +1,9 @@
 import t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
+import ErrorCollector, { ErrorType } from '../utils/errorCollector.js'
 
 export interface DangerousAndOperatorOptions {
+    errorCollector: ErrorCollector;
 }
 
 function getRootIdentifierOfMemberExpression(node: t.MemberExpression): t.Identifier {
@@ -26,15 +28,11 @@ function getRootIdentifierOfMemberExpression(node: t.MemberExpression): t.Identi
 const dangerousAndOperator = declare((api, options: DangerousAndOperatorOptions) => {
     api.assertVersion(7);   
     return {
-        pre () {
-            this.set('errors', []);
-        },
-
         visitor: {
             LogicalExpression(path, state) {
                 const parentNode = path.parent
                 const node = path.node
-                const errors = state.get('errors');
+                const { errorCollector } = options
                 let flag = false;
                 if (node.operator !== '&&') return 
                 if (t.isObjectProperty(parentNode)
@@ -64,20 +62,10 @@ const dangerousAndOperator = declare((api, options: DangerousAndOperatorOptions)
                     }
                 }
                 if (flag) {
-                    const { end: { line, column } } = (node.loc as t.SourceLocation)
-                    const tmp = Error.stackTraceLimit;
-                    Error.stackTraceLimit = 0;
-                    errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column})\n >>>>>tips: The value of this expression may not be as expected<<<<<`, Error));
-                    Error.stackTraceLimit = tmp;
+                    errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
                 }
             },
         },
-
-        post() {
-            this.get('errors').forEach(err => {
-                console.log(err, '\n');
-            });
-        }
     }
 })
 

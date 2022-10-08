@@ -1,16 +1,15 @@
 import t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
+import ErrorCollector, { ErrorType } from '../utils/errorCollector.js'
 
 export interface NeedHandlerInCatchOptions {
     reactImportPath?: string;
+    errorCollector: ErrorCollector;
 }
 
 const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => {
     api.assertVersion(7);   
     return {
-        pre() {
-            this.set('errors', []);
-        },
         /**
          * 'CatchClause｜CallExpression' is not supported in current ts definitions of babel 
          */
@@ -18,20 +17,16 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
             // try...catch...
             CatchClause (path, state) {
                 const node = path.node
-                const errors = state.get('errors');
+                const { errorCollector } = options
 
                 if (t.isBlockStatement(node.body) && !node.body.body?.length) {
-                    const { end: { line, column } } = (node.loc as t.SourceLocation)
-                    const tmp = Error.stackTraceLimit;
-                    Error.stackTraceLimit = 0;
-                    errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) Should handle error in catch block`, Error));
-                    Error.stackTraceLimit = tmp;
+                    errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
                 }
             },
             // promise.catch()
             CallExpression (path, state) {
                 const node = path.node
-                const errors = state.get('errors');
+                const { errorCollector } = options
                 let isEmpty = false
 
                 if (t.isMemberExpression(node.callee) && t.isIdentifier(node.callee.property) && node.callee.property.name === 'catch') {
@@ -48,16 +43,13 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
 
                 if (isEmpty) {
                     const { end: { line, column } } = (node.loc as t.SourceLocation)
-                    const tmp = Error.stackTraceLimit;
-                    Error.stackTraceLimit = 0;
-                    errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) Should handle error in catch block`, Error));
-                    Error.stackTraceLimit = tmp;
+                    errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
                 }
             },
             // componentDidCatch in react component
             ClassMethod (path, state) {
                 const node = path.node
-                const errors = state.get('errors');
+                const { errorCollector } = options
                 const reactImportPath = options.reactImportPath || 'react'
                 if(t.isIdentifier(node.key) &&  node.key.name === 'componentDidCatch' && !node.static) {
                     if(t.isBlockStatement(node.body) && !node.body.body.length) {
@@ -79,11 +71,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                                 if(binding?.kind === 'module' && (t.isImportSpecifier(binding.path.node) || t.isImportDefaultSpecifier(binding.path.node)) && t.isImportDeclaration(binding.path.parent)) {
                                     const importPath = binding.path.parent.source.value;
                                     if(importPath === reactImportPath) {
-                                        const { end: { line, column } } = (node.loc as t.SourceLocation)
-                                        const tmp = Error.stackTraceLimit;
-                                        Error.stackTraceLimit = 0;
-                                        errors.push(path.buildCodeFrameError(`${state.filename}(${line},${column}) \n >>>>>tips: Should handle error in catch block<<<<<`, Error));
-                                        Error.stackTraceLimit = tmp;
+                                        errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
                                     }
                                 }
                             }
@@ -93,12 +81,6 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                 }
             }
         },
-
-        post() {
-            this.get('errors').forEach(err => {
-                console.log(err, '\n');
-            });
-        }
     }
 })
 
