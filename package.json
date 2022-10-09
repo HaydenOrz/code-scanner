@@ -14,7 +14,7 @@
     ],
     "license": "ISC",
     "scripts": {
-        "dev": "ts-node ./src/index.ts",
+        "dev": "node --experimental-specifier-resolution=node --loader ts-node/esm src/index.ts",
         "compile": "rm -rf ./esm/** && tsc -p ./tsconfig.esm.json"
     },
     "dependencies": {

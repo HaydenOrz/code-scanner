@@ -1,16 +1,21 @@
-import { transformSync } from '@babel/core'
+import { transformSync } from '@babel/core';
 import type { ParserPlugin } from '@babel/parser';
 import { readFileSync } from 'fs';
-import FileSearcher, { Includes, Excludes, FileResult } from '../utils/fileSearcher.js';
-import ErrorCollector from '../utils/errorCollector.js'
-import needTryCatch, { NeedTryCatchOptions } from '../plugins/need-try-catch-plugin.js';
-import dangerousAndOperator, { DangerousAndOperatorOptions } from '../plugins/dangerous-and-operator.js';
-import needHandlerInCatch, { NeedHandlerInCatchOptions } from '../plugins/need-handler-in-catch-block.js'
+import chalk from 'chalk';
+import FileSearcher, { Includes, Excludes, FileResult } from '../utils/fileSearcher';
+import ErrorCollector from '../utils/errorCollector';
+import needTryCatch, { NeedTryCatchOptions } from '../plugins/need-try-catch-plugin';
+import dangerousAndOperator, { DangerousAndOperatorOptions } from '../plugins/dangerous-and-operator';
+import needHandlerInCatch, { NeedHandlerInCatchOptions } from '../plugins/need-handler-in-catch-block';
+import dangerousInitState, { DangerousInitStateOptions } from '../plugins/dangerous-init-state';
+
 
 export type ScanPluginsConf = 
     { plugin: 'needTryCatch', options?: Omit<NeedTryCatchOptions, 'errorCollector'> } |
     { plugin: 'dangerousAndOperator', options?: Omit<DangerousAndOperatorOptions, 'errorCollector'> } |
-    { plugin: 'needHandlerInCatch', options?: Omit<NeedHandlerInCatchOptions, 'errorCollector'> }
+    { plugin: 'needHandlerInCatch', options?: Omit<NeedHandlerInCatchOptions, 'errorCollector'> } |
+    { plugin: 'dangerousInitState', options?: Omit<DangerousInitStateOptions, 'errorCollector'> }
+
 
 export interface Options {
     /**
@@ -38,7 +43,8 @@ export interface Options {
 const pluginsMap = {
     needTryCatch,
     dangerousAndOperator,
-    needHandlerInCatch
+    needHandlerInCatch,
+    dangerousInitState
 }
 
 export default class Runner {
@@ -59,7 +65,7 @@ export default class Runner {
     private _getBabelPluginsConf (plugins: ScanPluginsConf[], errorCollector: ErrorCollector) {
         return plugins.map(({ plugin, options }) => {
             if(!pluginsMap[plugin]) {
-                console.error('plugin is not found!');
+                console.log(chalk.redBright('Error: '), chalk.gray(`Plugin ${plugin} is not found! Please check your config! \n `));
                 return null
             }
             const pluginOptions = {
@@ -76,13 +82,15 @@ export default class Runner {
 
         this._errorCollector = new ErrorCollector()
 
+        const scanPluginsConf = this._getBabelPluginsConf(scanPlugins, this._errorCollector)
+    
         this._fileMeta.forEach(({path, parsePlugins}) => {
             const fileContent = readFileSync(path, {
                 encoding: fileEncoding ?? 'utf8',
             });
 
             transformSync(fileContent, {
-                plugins: this._getBabelPluginsConf(scanPlugins, this._errorCollector),
+                plugins: scanPluginsConf,
                 parserOpts: {
                     sourceType: 'unambiguous',
                     plugins: Array.from(new Set([

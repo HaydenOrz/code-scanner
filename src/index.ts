@@ -1,10 +1,11 @@
-import Runner from "./runner/index.js";
+import Runner from "./runner";
 
 const pattern = '../dt-works/dt-batch-works/src/**/*.(tsx|js)'
 // const pattern = './mock/**/*.(tsx|js)'
 // const pattern = './mock/mock-danger-and-operator.tsx'
 // const pattern = './mock/mock-handler-in-catch-block.tsx'
 // const pattern = './mock/mock-danger-and-operator.tsx'
+// const pattern = './mock/mock-danger-initial-state.tsx'
 
 const runner = new Runner({
     includes: pattern,
@@ -17,6 +18,9 @@ const runner = new Runner({
         },
         {
             plugin: 'dangerousAndOperator'
+        },
+        {
+            plugin: 'dangerousInitState'
         }
     ]
 })

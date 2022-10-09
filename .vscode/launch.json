@@ -12,6 +12,7 @@
                 "src/index.ts"
             ],
             "runtimeArgs": [
+                "--experimental-specifier-resolution=node",
                 "--nolazy",
                 "--loader",
                 "ts-node/esm",

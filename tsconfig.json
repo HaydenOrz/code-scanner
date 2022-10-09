@@ -32,7 +32,6 @@
 		"sourceRoot": "./", 
         "paths": {
             "@/*": ["src/*"],
-            "module": ["src/module/*"]
         },
 	},
     "exclude": ["node_modules", "dist", "src/**/*.md", "mock/**"],
@@ -44,7 +43,6 @@
 			"noEmit": true,
             "paths": {
                 "@/*": ["src/*"],
-                "module": ["src/module/*"]
             },
         }
 	},
