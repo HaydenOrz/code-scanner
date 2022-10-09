@@ -1,6 +1,7 @@
 import t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
 import ErrorCollector, { ErrorType } from '../utils/errorCollector.js'
+import { isReactClassComponentDeclaration } from '../utils/index.js'
 
 export interface NeedHandlerInCatchOptions {
     reactImportPath?: string;
@@ -54,26 +55,8 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                 if(t.isIdentifier(node.key) &&  node.key.name === 'componentDidCatch' && !node.static) {
                     if(t.isBlockStatement(node.body) && !node.body.body.length) {
                         if(t.isClassBody(path.parentPath) && t.isClassDeclaration(path.parentPath.parent)) {
-                            const declaration = path.parentPath.parent;
-                            let superClassIdentifier = ''
-                            
-                            if(t.isMemberExpression(declaration.superClass) && t.isIdentifier(declaration.superClass.property) && (declaration.superClass.property.name === 'Component' || declaration.superClass.property.name === 'PureComponent') ) {
-                                superClassIdentifier = t.isIdentifier(declaration.superClass.object) ? declaration.superClass.object.name : ''
-                            } else if (t.isIdentifier(declaration.superClass)) {
-                                superClassIdentifier = declaration.superClass.name
-                            }
-
-                            if(path.scope.hasBinding(superClassIdentifier)) {
-                                const binding = path.scope.getBinding(superClassIdentifier);
-                                /**
-                                 * Currently only compatible with Specification ESM
-                                 */
-                                if(binding?.kind === 'module' && (t.isImportSpecifier(binding.path.node) || t.isImportDefaultSpecifier(binding.path.node)) && t.isImportDeclaration(binding.path.parent)) {
-                                    const importPath = binding.path.parent.source.value;
-                                    if(importPath === reactImportPath) {
-                                        errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
-                                    }
-                                }
+                            if(isReactClassComponentDeclaration(path.parentPath.parent, path.parentPath.parentPath.scope, reactImportPath)) {
+                                errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
                             }
                         }
                     }

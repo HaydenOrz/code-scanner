@@ -4,7 +4,7 @@
       "outDir": "./esm/",
       "module": "esnext",
       "target": "es6",
-      "declaration": true,
+      "declaration": false,
       "moduleResolution": "Node",
       "sourceMap": false,
       "sourceRoot": null,
