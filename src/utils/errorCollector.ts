@@ -17,7 +17,8 @@ export enum ErrorType {
     needTryCatch = 1,
     needHandlerInCatch,
     dangerousAndOperator,
-    dangerousInitState
+    dangerousInitState,
+    dangerousDefaultValue
 }
 
 export const pluginTipsMap = {
@@ -25,6 +26,7 @@ export const pluginTipsMap = {
     [ErrorType.needHandlerInCatch]: 'Should handle error in catch block',
     [ErrorType.dangerousAndOperator]: 'The value of this expression may not be as expected',
     [ErrorType.dangerousInitState]: "The function execution result is included in the initial value of the component's state, and the function is executed only when the module is loaded",
+    [ErrorType.dangerousDefaultValue]: "The value may be null!"
 }
 
 export default class ErrorCollector {
@@ -71,7 +73,7 @@ export default class ErrorCollector {
                 chalk.yellow(`(${loc.line}, ${loc.column + 1})`),
                 chalk.redBright('Error:'),
                 chalk.gray(pluginTips),
-                chalk.yellow('\n' + extraMsg)
+                extraMsg ? chalk.yellow('\n' + extraMsg) : ''
             )
             console.log(codeFrameErrMsg);
             console.log('\n');

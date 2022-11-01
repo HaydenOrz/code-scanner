@@ -8,13 +8,15 @@ import needTryCatch, { NeedTryCatchOptions } from '../plugins/need-try-catch-plu
 import dangerousAndOperator, { DangerousAndOperatorOptions } from '../plugins/dangerous-and-operator';
 import needHandlerInCatch, { NeedHandlerInCatchOptions } from '../plugins/need-handler-in-catch-block';
 import dangerousInitState, { DangerousInitStateOptions } from '../plugins/dangerous-init-state';
+import dangerousDefaultValue, { DangerousDefaultValueOptions } from '../plugins/dangerous-default-value'
 
 
 export type ScanPluginsConf = 
     { plugin: 'needTryCatch', options?: Omit<NeedTryCatchOptions, 'errorCollector'> } |
     { plugin: 'dangerousAndOperator', options?: Omit<DangerousAndOperatorOptions, 'errorCollector'> } |
     { plugin: 'needHandlerInCatch', options?: Omit<NeedHandlerInCatchOptions, 'errorCollector'> } |
-    { plugin: 'dangerousInitState', options?: Omit<DangerousInitStateOptions, 'errorCollector'> }
+    { plugin: 'dangerousInitState', options?: Omit<DangerousInitStateOptions, 'errorCollector'> } |
+    { plugin: 'dangerousDefaultValue', options?: Omit<DangerousDefaultValueOptions, 'errorCollector'> }
 
 
 export interface Options {
@@ -44,7 +46,8 @@ const pluginsMap = {
     needTryCatch,
     dangerousAndOperator,
     needHandlerInCatch,
-    dangerousInitState
+    dangerousInitState,
+    dangerousDefaultValue
 }
 
 export default class Runner {
