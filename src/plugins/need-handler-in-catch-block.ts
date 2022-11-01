@@ -51,7 +51,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
             ClassMethod (path, state) {
                 const node = path.node
                 const { errorCollector } = options
-                const reactImportPath = options.reactImportPath || 'react'
+                const reactImportPath = options.reactImportPath ?? 'react'
                 if(t.isIdentifier(node.key) &&  node.key.name === 'componentDidCatch' && !node.static) {
                     if(t.isBlockStatement(node.body) && !node.body.body.length) {
                         if(t.isClassBody(path.parentPath) && t.isClassDeclaration(path.parentPath.parent)) {

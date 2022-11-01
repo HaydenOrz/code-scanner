@@ -1,6 +1,6 @@
 import Runner from "./runner";
 
-const pattern = '../dt-works/dt-batch-works/src/**/*.(tsx|js)'
+const pattern = '../dt-works/dt-insight-studio/apps/**/src/**/*.tsx'
 // const pattern = './mock/**/*.(tsx|js)'
 // const pattern = './mock/mock-danger-and-operator.tsx'
 // const pattern = './mock/mock-handler-in-catch-block.tsx'
