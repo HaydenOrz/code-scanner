@@ -57,6 +57,23 @@ function findIdentifierInObjectProperty (
     }
 }
 
+function isDangerousNode (node: t.Node) {
+    if(t.isCallExpression(node)) return true
+    if(t.isMemberExpression(node) && t.isIdentifier(node.property)) {
+        const propertyName = node.property.name
+        if(propertyName !== 'href' && propertyName !== 'pathname' && propertyName !== 'hash' && propertyName !== 'search') {
+            return false
+        }
+        if(t.isIdentifier(node.object) && node.object.name === 'location') {
+            return true
+        }
+        if(t.isMemberExpression(node.object) && t.isIdentifier(node.object.property) && node.object.property.name === 'location') {
+            return true
+        }
+    }
+    return false
+} 
+
 function findPropertyInitByFunc(identifierName: string, scope: Scope) {
     const binding = scope.getBinding(identifierName)
     if(!binding) {
@@ -73,7 +90,7 @@ function findPropertyInitByFunc(identifierName: string, scope: Scope) {
                 if (!t.isObjectProperty(property)) return;
                 const propertyName = t.isIdentifier(property.key) ? property.key.name : '[expression property]'
     
-                if (t.isCallExpression(property.value)) {
+                if (isDangerousNode(property.value)) {
                     result.push(`${valuePath}.${propertyName}`)
                 } else if (t.isObjectExpression(property.value) || t.isArrayExpression(property.value)){
                     findFuncRes(property.value, `${valuePath}.${propertyName}`, result)
@@ -81,7 +98,7 @@ function findPropertyInitByFunc(identifierName: string, scope: Scope) {
             })
         } else if (t.isArrayExpression(node)) {
             node.elements.forEach((ele, index) => {
-                if (t.isCallExpression(ele)) {
+                if (isDangerousNode(ele)) {
                     result.push(`${valuePath}[${index}]`)
                 } else if (t.isObjectExpression(ele) || t.isArrayExpression(ele)){
                     findFuncRes(ele, `${valuePath}[${index}]`, result)
