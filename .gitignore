@@ -15,6 +15,7 @@ dist/
 /build
 /lib
 /esm
+/mock
 
 # misc
 .DS_Store
