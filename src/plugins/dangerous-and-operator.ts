@@ -62,7 +62,7 @@ const dangerousAndOperator = declare((api, options: DangerousAndOperatorOptions)
                     }
                 }
                 if (flag) {
-                    errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
+                    errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.dangerousAndOperator)
                 }
             },
         },
