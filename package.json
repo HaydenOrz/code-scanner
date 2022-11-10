@@ -35,6 +35,7 @@
         "chalk": "4.1.2",
         "commander": "9.2.0",
         "fast-glob": "^3.2.11",
+        "progress": "^2.0.3",
         "tslib": "^2.3.1"
     },
     "config": {
@@ -54,6 +55,7 @@
         "@types/babel__helper-plugin-utils": "^7.10.0",
         "@types/babel__traverse": "^7.18.2",
         "@types/node": "^17.0.21",
+        "@types/progress": "^2.0.5",
         "commitizen": "^4.2.5",
         "husky": "^8.0.1",
         "ts-node": "^10.7.0",

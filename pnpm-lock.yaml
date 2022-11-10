@@ -14,11 +14,13 @@ specifiers:
   '@types/babel__helper-plugin-utils': ^7.10.0
   '@types/babel__traverse': ^7.18.2
   '@types/node': ^17.0.21
+  '@types/progress': ^2.0.5
   chalk: 4.1.2
   commander: 9.2.0
   commitizen: ^4.2.5
   fast-glob: ^3.2.11
   husky: ^8.0.1
+  progress: ^2.0.3
   ts-node: ^10.7.0
   tslib: ^2.3.1
   typescript: ^4.6.2
@@ -32,6 +34,7 @@ dependencies:
   chalk: 4.1.2
   commander: 9.2.0
   fast-glob: 3.2.11
+  progress: 2.0.3
   tslib: 2.4.0
 
 devDependencies:
@@ -43,6 +46,7 @@ devDependencies:
   '@types/babel__helper-plugin-utils': 7.10.0
   '@types/babel__traverse': 7.18.2
   '@types/node': 17.0.45
+  '@types/progress': 2.0.5
   commitizen: 4.2.5
   husky: 8.0.1
   ts-node: 10.9.1_ade2daf66b8f374edc0171461f65d2b6
@@ -576,6 +580,12 @@ packages:
 
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
+    dev: true
+
+  /@types/progress/2.0.5:
+    resolution: {integrity: sha512-ZYYVc/kSMkhH9W/4dNK/sLNra3cnkfT2nJyOAIDY+C2u6w72wa0s1aXAezVtbTsnN8HID1uhXCrLwDE2ZXpplg==}
+    dependencies:
+      '@types/node': 17.0.45
     dev: true
 
   /JSONStream/1.3.5:
@@ -1727,6 +1737,11 @@ packages:
   /picomatch/2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/picomatch/-/picomatch-2.3.1.tgz}
     engines: {node: '>=8.6'}
+
+  /progress/2.0.3:
+    resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
+    engines: {node: '>=0.4.0'}
+    dev: false
 
   /punycode/2.1.1:
     resolution: {integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==}

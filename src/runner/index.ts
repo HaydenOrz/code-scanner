@@ -1,7 +1,8 @@
 import { transformSync } from '@babel/core';
 import type { ParserPlugin } from '@babel/parser';
 import { readFileSync } from 'fs';
-import Chalk from 'chalk'
+import chalk from 'chalk'
+import ProgressBar from 'progress'
 import FileSearcher, { Includes, Excludes, FileResult } from '../utils/fileSearcher';
 import ErrorCollector from '../utils/errorCollector';
 import needTryCatch, { NeedTryCatchOptions } from '../plugins/need-try-catch-plugin';
@@ -60,6 +61,7 @@ export default class Runner {
     private _fileMeta: FileResult;
     private _errorCollector: ErrorCollector;
     private _debug: boolean;
+    private _bar: InstanceType<typeof ProgressBar>
 
     private _getFileMeta () {
         const { includes, excludes } = this._config
@@ -71,8 +73,8 @@ export default class Runner {
         return plugins.map(({ plugin, options }) => {
             if(!pluginsMap[plugin]) {
                 console.log(
-                    Chalk.redBright('Error: '),
-                    Chalk.gray(`Plugin ${plugin} is not found! Please check your config! \n `)
+                    chalk.redBright('Error: '),
+                    chalk.gray(`Plugin ${plugin} is not found! Please check your config! \n `)
                 );
                 return null
             }
@@ -84,12 +86,24 @@ export default class Runner {
         }).filter(Boolean)
     }
 
+    private _initProcessBar = () => {
+        const barFormat = chalk.cyan.bold('  Scanning ') + ':bar' + chalk.green.bold(' :percent');
+        this._bar = new ProgressBar(barFormat,
+            {
+                complete: chalk.green('█'),
+                incomplete: chalk.whiteBright('█'),
+                width: 30,
+                total: this._fileMeta.length,
+            }
+        );
+    }
+
     private _begin () {
         const { scanPlugins, babelParsePlugins = [], fileEncoding } = this._config
         if(!scanPlugins?.length) {
             console.log(
-                Chalk.redBright('Error: '),
-                Chalk.gray(`ScanPlugins not found in config file \n`)
+                chalk.redBright('Error: '),
+                chalk.gray(`ScanPlugins not found in config file \n`)
             );
             return
         }
@@ -100,8 +114,8 @@ export default class Runner {
     
         if(!scanPluginsConf?.length) {
             console.log(
-                Chalk.redBright('Error: '),
-                Chalk.gray(`There are no scanPlugins available!\n`)
+                chalk.redBright('Error: '),
+                chalk.gray(`There are no scanPlugins available!\n`)
             );
             return
         }
@@ -110,7 +124,7 @@ export default class Runner {
             const fileContent = readFileSync(path, {
                 encoding: fileEncoding ?? 'utf8',
             });
-
+            this._bar.tick()
             transformSync(fileContent, {
                 plugins: scanPluginsConf,
                 parserOpts: {
@@ -129,6 +143,8 @@ export default class Runner {
             });
         })
 
+        console.log(chalk.green.bold('Scanner run finished!'));
+        this._bar.terminate();
         this._errorCollector.printCodeErrors()
     }
 
@@ -142,6 +158,7 @@ export default class Runner {
 
     run() {
         this._getFileMeta();
+        this._initProcessBar()
         this._begin();
     }
 }
