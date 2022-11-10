@@ -1,4 +1,4 @@
-
+#!/usr/bin/env node
 import { Command } from 'commander'
 import { generateDefaultConfigFile, getConfig } from './config'
 import Runner from "../runner";
