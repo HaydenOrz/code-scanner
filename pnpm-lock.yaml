@@ -15,6 +15,7 @@ specifiers:
   '@types/babel__traverse': ^7.18.2
   '@types/node': ^17.0.21
   chalk: 4.1.2
+  commander: 9.2.0
   commitizen: ^4.2.5
   fast-glob: ^3.2.11
   husky: ^8.0.1
@@ -29,6 +30,7 @@ dependencies:
   '@babel/parser': 7.18.13
   '@babel/types': 7.18.13
   chalk: 4.1.2
+  commander: 9.2.0
   fast-glob: 3.2.11
   tslib: 2.4.0
 
@@ -787,6 +789,11 @@ packages:
 
   /color-name/1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+
+  /commander/9.2.0:
+    resolution: {integrity: sha512-e2i4wANQiSXgnrBlIatyHtP1odfUp0BbV5Y5nEGbxtIrStkEOAAzCUirvLBNXHLr7kwLvJl6V+4V3XV9x7Wd9w==}
+    engines: {node: ^12.20.0 || >=14}
+    dev: false
 
   /commitizen/4.2.5:
     resolution: {integrity: sha512-9sXju8Qrz1B4Tw7kC5KhnvwYQN88qs2zbiB8oyMsnXZyJ24PPGiNM3nHr73d32dnE3i8VJEXddBFIbOgYSEXtQ==}

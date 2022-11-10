@@ -1,17 +1,19 @@
 {
     "name": "code-scanner",
-    "version": "1.0.0",
+    "version": "0.0.1-alpah.0",
     "description": "scan js|ts|jsx|tsx code",
     "repository": {
         "type": "git",
         "url": "https://github.com/HaydenOrz/code-scanner"
     },
     "author": "Hayden",
-    "main": "lib/index.js",
+    "main": "./lib/cli/index.js",
     "files": [
-        "lib/*",
-        "esm/*"
-      ],
+        "lib/*"
+    ],
+    "bin": {
+        "scanner": "./lib/cli/index.js"
+    },
     "keywords": [
         "babel",
         "typescript",
@@ -20,7 +22,7 @@
     ],
     "license": "ISC",
     "scripts": {
-        "dev": "npm run compile && node ./lib/index.js",
+        "dev": "tsc -w --sourceMap",
         "compile": "rm -rf ./lib/** && tsc",
         "prepare": "husky install"
     },
@@ -31,6 +33,7 @@
         "@babel/parser": "^7.18.13",
         "@babel/types": "^7.17.0",
         "chalk": "4.1.2",
+        "commander": "9.2.0",
         "fast-glob": "^3.2.11",
         "tslib": "^2.3.1"
     },
