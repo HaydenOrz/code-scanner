@@ -44,7 +44,6 @@ export function isReactHookCallExpression (node: t.CallExpression, scope: Scope,
             hookName = node.callee.property.name;
         }
     }
-    console.log(bindingName, hookName);
     /**
      * 暂时只处理 ESM 规范引入
      * TODO: 

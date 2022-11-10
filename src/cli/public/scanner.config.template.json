@@ -1,0 +1,20 @@
+{
+    "includes": "src/**/*.(ts|tsx|js|jsx)",
+    "scanPlugins": [
+        {
+            "plugin": "needTryCatch"
+        },
+        {
+            "plugin": "needHandlerInCatch"
+        },
+        {
+            "plugin": "dangerousAndOperator"
+        },
+        {
+            "plugin": "dangerousInitState"
+        },
+        {
+            "plugin": "dangerousDefaultValue"
+        }
+    ]
+}

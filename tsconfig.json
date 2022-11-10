@@ -7,6 +7,7 @@
 	  "esModuleInterop": true,
 	  "strict": false,
 	  "strictPropertyInitialization": false,
+	  "resolveJsonModule": true,
 	  "outDir": "lib",
 	  "lib": ["es2020"],
 	  "module": "commonjs",

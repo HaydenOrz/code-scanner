@@ -19,7 +19,7 @@ export type ScanPluginsConf =
     { plugin: 'dangerousDefaultValue', options?: Omit<DangerousDefaultValueOptions, 'errorCollector'> }
 
 
-export interface Options {
+export interface IScannerConfig {
     /**
      * The files you want to scan
      */
@@ -51,24 +51,29 @@ const pluginsMap = {
 }
 
 export default class Runner {
-    constructor (options: Options) {
-        this._options = options
+    constructor (scannerConfig?: IScannerConfig, debug?: boolean) {
+        this._config = scannerConfig;
+        this._debug = debug;
     }
 
-    private _options: Options;
+    private _config: IScannerConfig;
     private _fileMeta: FileResult;
     private _errorCollector: ErrorCollector;
+    private _debug: boolean;
 
     private _getFileMeta () {
-        const { includes, excludes } = this._options
-        const fileSearcher = new FileSearcher(includes, excludes)
+        const { includes, excludes } = this._config
+        const fileSearcher = new FileSearcher(includes, excludes, this._debug)
         this._fileMeta = fileSearcher.run()
     }
 
     private _getBabelPluginsConf (plugins: ScanPluginsConf[], errorCollector: ErrorCollector) {
         return plugins.map(({ plugin, options }) => {
             if(!pluginsMap[plugin]) {
-                console.log(Chalk.redBright('Error: '), Chalk.gray(`Plugin ${plugin} is not found! Please check your config! \n `));
+                console.log(
+                    Chalk.redBright('Error: '),
+                    Chalk.gray(`Plugin ${plugin} is not found! Please check your config! \n `)
+                );
                 return null
             }
             const pluginOptions = {
@@ -80,13 +85,27 @@ export default class Runner {
     }
 
     private _begin () {
-        const { scanPlugins, babelParsePlugins = [], fileEncoding } = this._options
-        if(!scanPlugins?.length) return
+        const { scanPlugins, babelParsePlugins = [], fileEncoding } = this._config
+        if(!scanPlugins?.length) {
+            console.log(
+                Chalk.redBright('Error: '),
+                Chalk.gray(`ScanPlugins not found in config file \n`)
+            );
+            return
+        }
 
         this._errorCollector = new ErrorCollector()
 
         const scanPluginsConf = this._getBabelPluginsConf(scanPlugins, this._errorCollector)
     
+        if(!scanPluginsConf?.length) {
+            console.log(
+                Chalk.redBright('Error: '),
+                Chalk.gray(`There are no scanPlugins available!\n`)
+            );
+            return
+        }
+
         this._fileMeta.forEach(({path, parsePlugins}) => {
             const fileContent = readFileSync(path, {
                 encoding: fileEncoding ?? 'utf8',
@@ -111,6 +130,14 @@ export default class Runner {
         })
 
         this._errorCollector.printCodeErrors()
+    }
+
+    setConfig = (config: IScannerConfig) => {
+        this._config = config;
+    }
+
+    setDebugMode = () => {
+        this._debug = true
     }
 
     run() {

@@ -1,6 +1,7 @@
 import fastGlob from "fast-glob";
 import { normalize, extname } from 'path';
 import type { ParserPlugin } from '@babel/parser';
+import { logDebugInfo } from '../utils/debug'
 
 export enum EXTENSION_TYPE {
     JS = '.js',
@@ -27,28 +28,41 @@ export const Automaton: AutomatonType = {
 export type Pattern = string;
 export type PatternsGroup = Pattern[];
 export type Includes = Pattern | Pattern[];
-export type Excludes = Pattern[];
+export type Excludes = Pattern | Pattern[];
 export type FileResult = {
     path: string;
     parsePlugins: ParserPlugin[]
 }[]
 
 class FileSearcher {
-    constructor (includes: Includes, excludes?: Excludes) {
+    constructor (includes: Includes, excludes?: Excludes, debug?: boolean) {
         this.patterns = includes
         this.ignorePatterns = excludes
+        this._debug = debug
     }
     private patterns: Includes;
     private ignorePatterns: Excludes;
     private filesPaths: string [];
+    private _debug: boolean;
 
     private matchFiles() {
         const filesPath = fastGlob
             .sync(
                 this.patterns,
-                { ignore: this.ignorePatterns, dot: true, absolute: true }
+                { 
+                    ignore: Array.isArray(this.ignorePatterns) 
+                        ? this.ignorePatterns 
+                        : this.ignorePatterns 
+                            ? [this.ignorePatterns]
+                            : undefined,
+                    dot: true, 
+                    absolute: true
+                }
             )
             .map(normalize)
+        if(this._debug) {
+            logDebugInfo('All matched files are: ', filesPath)
+        }
         this.filesPaths = filesPath
     }
 
