@@ -1,6 +1,6 @@
 {
     "name": "flawed-code-scanner",
-    "version": "0.0.1-alpha.1",
+    "version": "0.0.1-beta.0",
     "description": "Scan for flawed code",
     "repository": {
         "type": "git",
