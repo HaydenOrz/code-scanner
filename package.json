@@ -6,10 +6,8 @@
         "type": "git",
         "url": "https://github.com/HaydenOrz/code-scanner"
     },
-    "type": "module",
     "author": "Hayden",
-    "main": "esm/index.js",
-    "module": "esm/index.js",
+    "main": "lib/index.js",
     "files": [
         "lib/*",
         "esm/*"
@@ -22,8 +20,8 @@
     ],
     "license": "ISC",
     "scripts": {
-        "dev": "node --experimental-specifier-resolution=node --loader ts-node/esm src/index.ts",
-        "compile": "rm -rf ./esm/** && tsc -p ./tsconfig.esm.json",
+        "dev": "npm run compile && node ./lib/index.js",
+        "compile": "rm -rf ./lib/** && tsc",
         "prepare": "husky install"
     },
     "dependencies": {
@@ -32,7 +30,7 @@
         "@babel/helper-plugin-utils": "^7.18.9",
         "@babel/parser": "^7.18.13",
         "@babel/types": "^7.17.0",
-        "chalk": "^5.1.0",
+        "chalk": "4.1.2",
         "fast-glob": "^3.2.11",
         "tslib": "^2.3.1"
     },

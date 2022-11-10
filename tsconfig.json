@@ -1,49 +1,17 @@
 {
-	"compilerOptions": {
-		"target": "esnext",
-		"module": "esnext",
-		"lib": [
-			"esnext",
-		],
-		"strict": true,
-		"noImplicitAny": false,
-		"strictNullChecks": false,
-		"sourceMap": true,
-		"skipLibCheck": true, // ignore check *.d.ts
-		"allowJs": true,
-		"checkJs": true,
-		"jsx": "react-jsx",
-		"declaration": true, // generate *.d.ts
-		"importHelpers": true, // import helpers from tslib, e.g. __extends、__rest
-		"moduleResolution": "node",
-		"isolatedModules": true, // Treat each file as a module
-		"esModuleInterop": true,
-		"resolveJsonModule": true, // allow resolve json module
-		"allowSyntheticDefaultImports": true, 
-		"preserveConstEnums": true,
-		"forceConsistentCasingInFileNames": true,
-		"baseUrl": "./", 
-		"rootDirs": [],
-		"typeRoots": [
-			"**/node_modules/@types",
-			"./src/typings"
-		],
-		"types": ["node"],
-		"sourceRoot": "./", 
-        "paths": {
-            "@/*": ["src/*"],
-        },
-	},
-    "exclude": ["node_modules", "dist", "src/**/*.md", "mock/**"],
+	"exclude": ["node_modules", "dist", "src/**/*.md", "mock/**"],
     "include": ["src/**/*"],
-	"ts-node": {
-		"esm": true,
-        "files": true,
-		"compilerOptions": {
-			"noEmit": true,
-            "paths": {
-                "@/*": ["src/*"],
-            },
-        }
+	"compilerOptions": {
+	  "allowJs": true,
+	  "skipLibCheck": true,
+	  "esModuleInterop": true,
+	  "strict": false,
+	  "strictPropertyInitialization": false,
+	  "outDir": "lib",
+	  "lib": ["es2020"],
+	  "module": "commonjs",
+	  "target": "es2020",
+	  "forceConsistentCasingInFileNames": true,
+	  "moduleResolution": "node",
 	},
-}
+}  

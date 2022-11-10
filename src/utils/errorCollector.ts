@@ -1,6 +1,6 @@
-import t from '@babel/types'
+import * as t from '@babel/types'
 import { codeFrameColumns } from '@babel/code-frame'
-import chalk from 'chalk'
+import Chalk from 'chalk';
 
 export interface CodeError {
     filePath: string;
@@ -69,11 +69,11 @@ export default class ErrorCollector {
     printCodeErrors = () => {
         this._errorPool.forEach((type, { pluginTips, filePath, loc, codeFrameErrMsg, extraMsg }) => {
             console.log(
-                chalk.cyan(filePath),
-                chalk.yellow(`(${loc.line}, ${loc.column + 1})`),
-                chalk.redBright('Error:'),
-                chalk.gray(pluginTips),
-                extraMsg ? chalk.yellow('\n' + extraMsg) : ''
+                Chalk.cyan(filePath),
+                Chalk.yellow(`(${loc.line}, ${loc.column + 1})`),
+                Chalk.redBright('Error:'),
+                Chalk.gray(pluginTips),
+                extraMsg ? Chalk.yellow('\n' + extraMsg) : ''
             )
             console.log(codeFrameErrMsg);
             console.log('\n');

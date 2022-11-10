@@ -1,4 +1,4 @@
-import t from '@babel/types'
+import * as t from '@babel/types'
 import type { Scope } from '@babel/traverse'
 
 export function isReactClassComponentDeclaration (node: t.ClassDeclaration, scope: Scope, reactImportPath) {

@@ -1,4 +1,4 @@
-import t from '@babel/types'
+import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
 import type { Scope } from '@babel/traverse'
 import ErrorCollector, { ErrorType } from '../utils/errorCollector'

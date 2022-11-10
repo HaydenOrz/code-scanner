@@ -1,7 +1,7 @@
 import { transformSync } from '@babel/core';
 import type { ParserPlugin } from '@babel/parser';
 import { readFileSync } from 'fs';
-import chalk from 'chalk';
+import Chalk from 'chalk'
 import FileSearcher, { Includes, Excludes, FileResult } from '../utils/fileSearcher';
 import ErrorCollector from '../utils/errorCollector';
 import needTryCatch, { NeedTryCatchOptions } from '../plugins/need-try-catch-plugin';
@@ -68,7 +68,7 @@ export default class Runner {
     private _getBabelPluginsConf (plugins: ScanPluginsConf[], errorCollector: ErrorCollector) {
         return plugins.map(({ plugin, options }) => {
             if(!pluginsMap[plugin]) {
-                console.log(chalk.redBright('Error: '), chalk.gray(`Plugin ${plugin} is not found! Please check your config! \n `));
+                console.log(Chalk.redBright('Error: '), Chalk.gray(`Plugin ${plugin} is not found! Please check your config! \n `));
                 return null
             }
             const pluginOptions = {
