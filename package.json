@@ -20,11 +20,12 @@
         "lint",
         "scan code"
     ],
-    "license": "ISC",
+    "license": "MIT",
     "scripts": {
-        "dev": "tsc -w --sourceMap",
+        "dev": "tsc -w --sourceMap --outDir dist",
         "compile": "rm -rf ./lib/** && tsc",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "release": "npm run compile && node ./scripts/release.js"
     },
     "dependencies": {
         "@babel/code-frame": "^7.18.6",
@@ -58,6 +59,8 @@
         "@types/progress": "^2.0.5",
         "commitizen": "^4.2.5",
         "husky": "^8.0.1",
+        "inquirer": "^8.2.2",
+        "standard-version": "^9.5.0",
         "ts-node": "^10.7.0",
         "typescript": "^4.6.2"
     }
