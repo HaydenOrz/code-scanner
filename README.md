@@ -30,7 +30,7 @@ ESlint 通常直接嵌入到项目中，在项目进行的过程中 ESlint 报�
 3. 运行
 
    ```shell
-   # npx scanner [path to your config file]
+   # npx scanner [glob path you want to scan] -c <path to tour config file>
    # 默认情况下读取 `${process.cwd()/scanner.config.json} 作为配置文件`
    npx scanner
    ```
