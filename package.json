@@ -1,7 +1,7 @@
 {
     "name": "flawed-code-scanner",
     "version": "0.0.1-alpha.1",
-    "description": "Scan for problematic code",
+    "description": "Scan for flawed code",
     "repository": {
         "type": "git",
         "url": "https://github.com/HaydenOrz/code-scanner"
