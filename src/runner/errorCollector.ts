@@ -1,6 +1,7 @@
 import * as t from '@babel/types'
 import { codeFrameColumns } from '@babel/code-frame'
 import Chalk from 'chalk';
+import { outPutMarkdown } from './convertError2md'
 
 export interface CodeError {
     filePath: string;
@@ -79,4 +80,9 @@ export default class ErrorCollector {
             console.log('\n');
         })
     }
+
+    outPutMarkdown = () => {
+        outPutMarkdown(this._errorPool)
+    }
+
 }

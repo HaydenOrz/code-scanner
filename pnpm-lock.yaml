@@ -13,6 +13,7 @@ specifiers:
   '@types/babel__core': ^7.1.19
   '@types/babel__helper-plugin-utils': ^7.10.0
   '@types/babel__traverse': ^7.18.2
+  '@types/json2md': ^1.5.1
   '@types/node': ^17.0.21
   '@types/progress': ^2.0.5
   chalk: 4.1.2
@@ -21,6 +22,7 @@ specifiers:
   fast-glob: ^3.2.11
   husky: ^8.0.1
   inquirer: ^8.2.2
+  json2md: ^2.0.0
   progress: ^2.0.3
   standard-version: ^9.5.0
   ts-node: ^10.7.0
@@ -36,6 +38,7 @@ dependencies:
   chalk: 4.1.2
   commander: 9.2.0
   fast-glob: 3.2.11
+  json2md: 2.0.0
   progress: 2.0.3
   tslib: 2.4.0
 
@@ -47,6 +50,7 @@ devDependencies:
   '@types/babel__core': 7.1.19
   '@types/babel__helper-plugin-utils': 7.10.0
   '@types/babel__traverse': 7.18.2
+  '@types/json2md': 1.5.1
   '@types/node': 17.0.45
   '@types/progress': 2.0.5
   commitizen: 4.2.5
@@ -570,6 +574,10 @@ packages:
     resolution: {integrity: sha512-FcFaxOr2V5KZCviw1TnutEMVUVsGt4D2hP1TAfXZAMKuHYW3xQhe3jTxNPWutgCJ3/X1c5yX8ZoGVEItxKbwBg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/@types/babel__traverse/-/babel__traverse-7.18.2.tgz}
     dependencies:
       '@babel/types': 7.18.13
+    dev: true
+
+  /@types/json2md/1.5.1:
+    resolution: {integrity: sha512-nl3qRDdBUtGeHEhwSeYMtXw5i6UXspS6pxaahmcrE4Fxt0UAvKvsJzu6UMtJ85+yTYiB9nA0TB1kFMEVkYDgUg==}
     dev: true
 
   /@types/minimist/1.2.2:
@@ -1565,6 +1573,10 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /indento/1.1.13:
+    resolution: {integrity: sha512-YZWk3mreBEM7sBPddsiQnW9Z8SGg/gNpFfscJq00HCDS7pxcQWWWMSVKJU7YkTRyDu1Zv2s8zaK8gQWKmCXHlg==}
+    dev: false
+
   /inflight/1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
     dependencies:
@@ -1703,6 +1715,12 @@ packages:
   /json-stringify-safe/5.0.1:
     resolution: {integrity: sha512-ZClg6AaYvamvYEE82d3Iyd3vSSIjQ+odgjaTzRuO3s7toCdFKczob2i0zCh7JE8kWn17yvAWhUVxvqGwUalsRA==}
     dev: true
+
+  /json2md/2.0.0:
+    resolution: {integrity: sha512-4PIMtD0zTfQZWcUId1EyHY2BQ2EG/imHWHkGFbXYPlczW8G6wPJA/BRVN3e5v6NPwFUCcoFvUsCeo6rzV2CWww==}
+    dependencies:
+      indento: 1.1.13
+    dev: false
 
   /json5/2.2.1:
     resolution: {integrity: sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/json5/-/json5-2.2.1.tgz}

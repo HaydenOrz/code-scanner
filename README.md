@@ -22,9 +22,9 @@ ESlint 通常直接嵌入到项目中，在项目进行的过程中 ESlint 报�
 2. 在项目中初始化
 
    ```shell
+    # 运行一下命令后项目根目录会新增一个 `scanner.config.json` 文件，这个文件是 flawed-code-scanner 的配置文件。当然你也可以选择手动新建一个 json 文件来配置。
    cd project
    npx scanner init
-   # 此时项目根目录会新增一个 `scanner.config.json` 文件，这个文件是 flawed-code-scanner 的配置文件。当然你也可以选择手动新建一个 json 文件来配置。
    ```
 
 3. 运行
@@ -32,7 +32,9 @@ ESlint 通常直接嵌入到项目中，在项目进行的过程中 ESlint 报�
    ```shell
    # npx scanner [glob path you want to scan] -c <path to tour config file>
    # 默认情况下读取 `${process.cwd()/scanner.config.json} 作为配置文件`
-   npx scanner
+   npx scanner # 扫描并将结果打印到控制台
+   npx scanner -n # 扫描且不打印结果
+   npx scanner -m # 扫描并将结果输出为 markdown, 默认输出路径为 `${process.cwd()}/.scanner/`
    ```
 
 4. 更多命令相关
@@ -43,41 +45,41 @@ ESlint 通常直接嵌入到项目中，在项目进行的过程中 ESlint 报�
 
 <br/>
 
-## 配置
+## 配置文件
 
-```js
-const a = {
-  includes: pattern | pattern[], // 想要扫描的文件目录，glob 模式
-  excludes: pattern | pattern[],
-  scanPlugins: [ // 扫描插件 配置
+```json
+{
+  "includes": "pattern | pattern[]", // 想要扫描的文件目录，glob 模式
+  "excludes": "pattern | pattern[]",
+  "scanPlugins": [// 扫描插件 配置
     {
-      plugin: "needHandlerInCatch", // 插件名称
-      options: {
-        reactImportPath?: "import path of react", // react 引入路径，默认是 'react'
+      "plugin": "needTryCatch", // 插件名称
+      "options": {
+        "reactImportPath": "import path of react",  // react 引入路径 默认是 "react"
       },
     },
     {
-      plugin: "needTryCatch",
+      "plugin": "needHandlerInCatch"
     },
     {
-      plugin: "dangerousAndOperator",
+      "plugin": "dangerousAndOperator"
     },
     {
-      plugin: "dangerousInitState",
-      options: {
-        reactImportPath?: "import path of react",
+      "plugin": "dangerousInitState",
+      "options": {
+        "reactImportPath": "import path of react",  // react 引入路径
       },
     },
     {
-      plugin: "dangerousDefaultValue",
-    },
+      "plugin": "dangerousDefaultValue"
+    }
   ],
   /**
    * babel parser 的插件配置，默认情况下，会根据文件后缀名自动使用对应插件
    * 比如针对 .tsx 文件，将自动启用 typescript 和 jsx 插件
    */
-  babelParsePlugins?: ['decorators-legacy'];
-  fileEncoding?: 'utf-8'; // 文件编码格式。默认是 utf-8
+  "babelParsePlugins": ["decorators-legacy"],
+  "fileEncoding": "utf-8" // 文件编码格式。默认是 utf-8
 }
 ```
 
