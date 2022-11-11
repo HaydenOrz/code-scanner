@@ -1,7 +1,7 @@
 import * as t from '@babel/types'
 import type { NodePath } from '@babel/core'
 import { declare } from '@babel/helper-plugin-utils';
-import ErrorCollector, { ErrorType } from '../utils/errorCollector'
+import ErrorCollector, { ErrorType } from '../runner/errorCollector'
 
 
 export interface NeedTryCatchOptions {

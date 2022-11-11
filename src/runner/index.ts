@@ -3,8 +3,8 @@ import type { ParserPlugin } from '@babel/parser';
 import { readFileSync } from 'fs';
 import chalk from 'chalk'
 import ProgressBar from 'progress'
-import FileSearcher, { Includes, Excludes, FileResult } from '../utils/fileSearcher';
-import ErrorCollector from '../utils/errorCollector';
+import FileSearcher, { Includes, Excludes, FileResult } from './fileSearcher';
+import ErrorCollector from './errorCollector';
 import needTryCatch, { NeedTryCatchOptions } from '../plugins/need-try-catch-plugin';
 import dangerousAndOperator, { DangerousAndOperatorOptions } from '../plugins/dangerous-and-operator';
 import needHandlerInCatch, { NeedHandlerInCatchOptions } from '../plugins/need-handler-in-catch-block';
@@ -145,7 +145,6 @@ export default class Runner {
 
         console.log(chalk.green.bold('Scanner run finished!'));
         this._bar.terminate();
-        this._errorCollector.printCodeErrors()
     }
 
     setConfig = (config: IScannerConfig) => {
@@ -154,6 +153,10 @@ export default class Runner {
 
     setDebugMode = () => {
         this._debug = true
+    }
+
+    getErrorCollector = () => {
+        return this._errorCollector
     }
 
     run() {

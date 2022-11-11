@@ -1,7 +1,7 @@
 import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
 import type { Scope } from '@babel/traverse'
-import ErrorCollector, { ErrorType } from '../utils/errorCollector'
+import ErrorCollector, { ErrorType } from '../runner/errorCollector'
 import { isReactClassComponentDeclaration, isReactHookCallExpression } from '../utils/babelUtils'
 
 export interface DangerousInitStateOptions {

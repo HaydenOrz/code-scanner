@@ -59,7 +59,7 @@ export default class ErrorCollector {
     }
 
     getCodeErrors = () => {
-        return Array.from(this._errorPool.keys())
+        return this._errorPool
     }
 
     clearCodeErrors = () => {

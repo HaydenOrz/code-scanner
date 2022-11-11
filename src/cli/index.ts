@@ -26,6 +26,7 @@ program
         }
         runner.setConfig(config)
         runner.run()
+        runner.getErrorCollector().printCodeErrors()
     })
 
 program.command('init')
