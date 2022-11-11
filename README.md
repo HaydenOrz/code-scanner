@@ -22,7 +22,7 @@ ESlint 通常直接嵌入到项目中，在项目进行的过程中 ESlint 报�
 2. 在项目中初始化
 
    ```shell
-    # 运行一下命令后项目根目录会新增一个 `scanner.config.json` 文件，这个文件是 flawed-code-scanner 的配置文件。当然你也可以选择手动新建一个 json 文件来配置。
+    # 运行以下命令后项目根目录会新增一个 `scanner.config.json` 文件，这个文件是 flawed-code-scanner 的配置文件。当然你也可以选择手动新建一个 json 文件来配置。
    cd project
    npx scanner init
    ```
@@ -47,7 +47,7 @@ ESlint 通常直接嵌入到项目中，在项目进行的过程中 ESlint 报�
 
 ## 配置文件
 
-```json
+```js
 {
   "includes": "pattern | pattern[]", // 想要扫描的文件目录，glob 模式
   "excludes": "pattern | pattern[]",
