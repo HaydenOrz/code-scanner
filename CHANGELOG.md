@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1](https://github.com/HaydenOrz/code-scanner/compare/v0.0.1-beta.2...v0.0.1) (2022-11-15)
+
+
+### Features
+
+* print summary when scanner finished ([6e03a8e](https://github.com/HaydenOrz/code-scanner/commit/6e03a8e26d123bf1c240447134d240f1718195de))
+
 ### [0.0.1-beta.2](https://github.com/HaydenOrz/code-scanner/compare/v0.0.1-beta.1...v0.0.1-beta.2) (2022-11-11)
 
 
