@@ -1,6 +1,6 @@
 import * as t from '@babel/types'
 import { codeFrameColumns } from '@babel/code-frame'
-import Chalk from 'chalk';
+import chalk from 'chalk';
 import { outPutMarkdown } from './convertError2md'
 
 export interface CodeError {
@@ -32,7 +32,7 @@ export const pluginTipsMap = {
 
 export default class ErrorCollector {
 
-    _errorPool: Map<CodeError, ErrorType> = new Map<CodeError, ErrorType>()
+    private _errorPool: Map<CodeError, ErrorType> = new Map<CodeError, ErrorType>()
 
     static buildCodeError (node: t.Node, filePath: string, code: string, errorType: ErrorType, extraMsg?: string,): CodeError {
         const codeFrameErrMsg = codeFrameColumns(
@@ -70,15 +70,40 @@ export default class ErrorCollector {
     printCodeErrors = () => {
         this._errorPool.forEach((type, { pluginTips, filePath, loc, codeFrameErrMsg, extraMsg }) => {
             console.log(
-                Chalk.cyan(filePath),
-                Chalk.yellow(`(${loc.line}, ${loc.column + 1})`),
-                Chalk.redBright('Error:'),
-                Chalk.gray(pluginTips),
-                extraMsg ? Chalk.yellow('\n' + extraMsg) : ''
+                chalk.cyan(filePath),
+                chalk.yellow(`(${loc.line}, ${loc.column + 1})`),
+                chalk.redBright('Error:'),
+                chalk.gray(pluginTips),
+                extraMsg ? chalk.yellow('\n' + extraMsg) : ''
             )
             console.log(codeFrameErrMsg);
             console.log('\n');
         })
+    }
+
+    printSummary = () => {
+        const errors = Array.from(this._errorPool.entries()) 
+        const allCount = errors.length;
+        const allTypes = Array.from(new Set(errors))
+        const pluginSummary = allTypes.reduce((prev, cur) => {
+            const [ _error, type ] = cur
+            if(prev[type]) {
+                prev[type].count += 1
+            } else {
+                prev[type] = {
+                    type,
+                    count: 1
+                }
+            }
+            return prev
+        },{} as { [key: string]: { type: ErrorType, count: number } } )
+
+        let summary = chalk.yellow("total: ") + chalk.redBright(`${allCount} `) + chalk.white("errors") + "\n"
+        summary += chalk.white('---------------------------------------\n')
+        Object.values(pluginSummary).forEach(({type, count}) => {
+            summary += chalk.cyanBright(`${ErrorType[type]} `)+ chalk.gray("plugin: ") + chalk.redBright(`${count} `) + chalk.gray("errors") +"\n"
+        })
+        console.log(summary)
     }
 
     outPutMarkdown = () => {

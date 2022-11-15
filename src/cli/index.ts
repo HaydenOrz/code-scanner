@@ -36,7 +36,7 @@ program
         if(!options.noconsole) {
             runner.getErrorCollector().printCodeErrors()
         }
-        
+        runner.getErrorCollector().printSummary()
     })
 
 program.command('init')

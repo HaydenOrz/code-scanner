@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import chalk from 'chalk'
 import ProgressBar from 'progress'
 import FileSearcher, { Includes, Excludes, FileResult } from './fileSearcher';
-import ErrorCollector from './errorCollector';
+import ErrorCollector, { ErrorType } from './errorCollector';
 import needTryCatch, { NeedTryCatchOptions } from '../plugins/need-try-catch-plugin';
 import dangerousAndOperator, { DangerousAndOperatorOptions } from '../plugins/dangerous-and-operator';
 import needHandlerInCatch, { NeedHandlerInCatchOptions } from '../plugins/need-handler-in-catch-block';
