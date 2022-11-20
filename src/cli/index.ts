@@ -2,14 +2,14 @@
 import { Command } from 'commander'
 import chalk from 'chalk';
 import { generateDefaultConfigFile, getConfig } from './config'
-import Runner from "../runner";
+import RunnerForCli from "./cliRunner";
 import { logDebugInfo } from '../utils/debug'
 
 const version = require('../../package.json').version
 const defaultConfigFilePath = `${process.cwd()}/scanner.config.json`
 
 const program = new Command();
-const runner = new Runner()
+const runner = new RunnerForCli()
 
 program
     .name('code-scanner')

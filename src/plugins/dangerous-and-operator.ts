@@ -1,6 +1,6 @@
 import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
-import ErrorCollector, { ErrorType } from '../runner/errorCollector'
+import { ErrorType, ErrorCollector } from '../runner/codeError'
 
 export interface DangerousAndOperatorOptions {
     errorCollector: ErrorCollector;
@@ -62,7 +62,7 @@ const dangerousAndOperator = declare((api, options: DangerousAndOperatorOptions)
                     }
                 }
                 if (flag) {
-                    errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.dangerousAndOperator)
+                    errorCollector.collect(node, state.filename, state.file.code, ErrorType.dangerousAndOperator)
                 }
             },
         },

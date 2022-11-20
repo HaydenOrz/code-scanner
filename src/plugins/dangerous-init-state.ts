@@ -1,8 +1,8 @@
 import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
 import type { Scope } from '@babel/traverse'
-import ErrorCollector, { ErrorType } from '../runner/errorCollector'
-import { isReactClassComponentDeclaration, isReactHookCallExpression } from '../utils/babelUtils'
+import { isReactClassComponentDeclaration } from '../utils/babelUtils'
+import { ErrorType, ErrorCollector } from '../runner/codeError'
 
 export interface DangerousInitStateOptions {
     reactImportPath?: string;
@@ -77,9 +77,6 @@ function isDangerousNode (node: t.Node) {
 function findPropertyInitByFunc(identifierName: string, scope: Scope) {
     const binding = scope.getBinding(identifierName)
     if(!binding) {
-        console.log(identifierName);
-        console.log(binding);
-        // console.log();
         return
     }
     const { path: { node } } = binding;
@@ -164,7 +161,7 @@ const dangerousInitState = declare((api, options: DangerousInitStateOptions) => 
                                 })
                                 .filter(Boolean)
 
-                            suspectedIdentifiers.length && errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.dangerousInitState, generateErrMsgWithSuspectedList(suspectedIdentifiers))
+                            suspectedIdentifiers.length && errorCollector.collect(node, state.filename, state.file.code, ErrorType.dangerousInitState, generateErrMsgWithSuspectedList(suspectedIdentifiers))
                         }
                     }
                 }

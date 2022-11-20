@@ -1,7 +1,7 @@
 import json2md from 'json2md'
 import fs from 'fs'
 import path from 'path'
-import { ErrorType, CodeError } from './errorCollector'
+import { ErrorType, CodeError } from '../runner/codeError'
 
 export function outPutMarkdown (codeError?: Map<CodeError, ErrorType> ) {
     const scanResultsMap = {
@@ -29,7 +29,7 @@ export function outPutMarkdown (codeError?: Map<CodeError, ErrorType> ) {
 
     codeError.forEach((errorType, error) => {
         const { filePath, codeFrameErrMsg, loc, pluginTips, extraMsg } = error;
-        const errorLocation = `${filePath}(${loc.line}, ${loc.column + 1})`;
+        const errorLocation = `${filePath}(${loc.end.line}, ${loc.end.column + 1})`;
         scanResultsMap[errorType].push(
             { h2: path.basename(filePath) },
             // { link: { title: path.basename(filePath), source: `file:${errorLocation}` }},

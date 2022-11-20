@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path  from 'path'
 import chalk from 'chalk'
-import { IScannerConfig } from '../runner'
+import { IScannerConfig } from './cliRunner'
 import { logDebugInfo } from '../utils/debug'
 
 import './public/scanner.config.template.json'

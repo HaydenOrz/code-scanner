@@ -1,8 +1,7 @@
 import * as t from '@babel/types'
 import type { NodePath } from '@babel/core'
 import { declare } from '@babel/helper-plugin-utils';
-import ErrorCollector, { ErrorType } from '../runner/errorCollector'
-
+import { ErrorType, ErrorCollector } from '../runner/codeError'
 
 export interface NeedTryCatchOptions {
     errorCollector: ErrorCollector
@@ -41,7 +40,7 @@ const needTryCatch = declare((api, options: NeedTryCatchOptions, dirname) => {
                 if ( t.isMemberExpression(node.callee) && t.isIdentifier(node.callee.object) && t.isIdentifier(node.callee.property) ) {
                     if (node.callee.object.name === 'JSON' && node.callee.property.name === 'parse') {
                         if(!hasErrorCapture(path)) {
-                            errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needTryCatch)
+                            errorCollector.collect(node, state.filename, state.file.code, ErrorType.needTryCatch)
                         }
                     }
                 }

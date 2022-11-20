@@ -1,7 +1,7 @@
 import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
-import ErrorCollector, { ErrorType } from '../runner/errorCollector'
 import { isReactClassComponentDeclaration } from '../utils/babelUtils'
+import { ErrorType, ErrorCollector } from '../runner/codeError'
 
 export interface NeedHandlerInCatchOptions {
     reactImportPath?: string;
@@ -21,7 +21,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                 const { errorCollector } = options
 
                 if (t.isBlockStatement(node.body) && !node.body.body?.length) {
-                    errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
+                    errorCollector.collect(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
                 }
             },
             // promise.catch()
@@ -44,7 +44,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
 
                 if (isEmpty) {
                     const { end: { line, column } } = (node.loc as t.SourceLocation)
-                    errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
+                    errorCollector.collect(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
                 }
             },
             // componentDidCatch in react component
@@ -56,7 +56,7 @@ const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => 
                     if(t.isBlockStatement(node.body) && !node.body.body.length) {
                         if(t.isClassBody(path.parentPath) && t.isClassDeclaration(path.parentPath.parent)) {
                             if(isReactClassComponentDeclaration(path.parentPath.parent, path.parentPath.parentPath.scope, reactImportPath)) {
-                                errorCollector.buildAndSaveCodeError(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
+                                errorCollector.collect(node, state.filename, state.file.code, ErrorType.needHandlerInCatch)
                             }
                         }
                     }

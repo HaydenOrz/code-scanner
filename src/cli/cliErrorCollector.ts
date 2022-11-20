@@ -2,35 +2,9 @@ import * as t from '@babel/types'
 import { codeFrameColumns } from '@babel/code-frame'
 import chalk from 'chalk';
 import { outPutMarkdown } from './convertError2md'
+import { CodeError, ErrorType, pluginTipsMap, ErrorCollector } from '../runner/codeError'
 
-export interface CodeError {
-    filePath: string;
-    codeFrameErrMsg: string;
-    loc: {
-        line: number;
-        column: number;
-    };
-    pluginTips: string;
-    extraMsg?: string 
-}
-
-export enum ErrorType {
-    needTryCatch = 1,
-    needHandlerInCatch,
-    dangerousAndOperator,
-    dangerousInitState,
-    dangerousDefaultValue
-}
-
-export const pluginTipsMap = {
-    [ErrorType.needTryCatch]: 'Should be wrapped by try...catch...',
-    [ErrorType.needHandlerInCatch]: 'Should handle error in catch block',
-    [ErrorType.dangerousAndOperator]: 'The value of this expression may not be as expected',
-    [ErrorType.dangerousInitState]: "The function execution result is included in the initial value of the component's state, and the function is executed only when the module is loaded",
-    [ErrorType.dangerousDefaultValue]: "The value may be null!"
-}
-
-export default class ErrorCollector {
+export default class CliErrorCollector implements ErrorCollector {
 
     private _errorPool: Map<CodeError, ErrorType> = new Map<CodeError, ErrorType>()
 
@@ -38,13 +12,13 @@ export default class ErrorCollector {
         const codeFrameErrMsg = codeFrameColumns(
             code,
             { start: node.loc.start, end: node.loc.end },
-            { highlightCode: true,  }
+            { highlightCode: true }
         )
         const pluginTips = pluginTipsMap[errorType]
         return {
             filePath,
             codeFrameErrMsg,
-            loc: node.loc.end,
+            loc: node.loc,
             pluginTips,
             extraMsg
         }
@@ -54,8 +28,8 @@ export default class ErrorCollector {
         this._errorPool.set(codeError, errorType)
     }
 
-    buildAndSaveCodeError = (node: t.Node, filePath: string, code: string, errorType: ErrorType, extraMsg?: string) => {
-        const codeError = ErrorCollector.buildCodeError(node, filePath, code, errorType, extraMsg)
+    collect = (node: t.Node, filePath: string, code: string, errorType: ErrorType, extraMsg?: string) => {
+        const codeError = CliErrorCollector.buildCodeError(node, filePath, code, errorType, extraMsg)
         this.saveCodeErrors(codeError, errorType)
     }
 
@@ -71,7 +45,7 @@ export default class ErrorCollector {
         this._errorPool.forEach((type, { pluginTips, filePath, loc, codeFrameErrMsg, extraMsg }) => {
             console.log(
                 chalk.cyan(filePath),
-                chalk.yellow(`(${loc.line}, ${loc.column + 1})`),
+                chalk.yellow(`(${loc.end.line}, ${loc.end.column + 1})`),
                 chalk.redBright('Error:'),
                 chalk.gray(pluginTips),
                 extraMsg ? chalk.yellow('\n' + extraMsg) : ''

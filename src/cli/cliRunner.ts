@@ -1,24 +1,11 @@
-import { transformSync } from '@babel/core';
 import type { ParserPlugin } from '@babel/parser';
 import { readFileSync } from 'fs';
 import chalk from 'chalk'
 import ProgressBar from 'progress'
 import FileSearcher, { Includes, Excludes, FileResult } from './fileSearcher';
-import ErrorCollector, { ErrorType } from './errorCollector';
-import needTryCatch, { NeedTryCatchOptions } from '../plugins/need-try-catch-plugin';
-import dangerousAndOperator, { DangerousAndOperatorOptions } from '../plugins/dangerous-and-operator';
-import needHandlerInCatch, { NeedHandlerInCatchOptions } from '../plugins/need-handler-in-catch-block';
-import dangerousInitState, { DangerousInitStateOptions } from '../plugins/dangerous-init-state';
-import dangerousDefaultValue, { DangerousDefaultValueOptions } from '../plugins/dangerous-default-value'
-
-
-export type ScanPluginsConf = 
-    { plugin: 'needTryCatch', options?: Omit<NeedTryCatchOptions, 'errorCollector'> } |
-    { plugin: 'dangerousAndOperator', options?: Omit<DangerousAndOperatorOptions, 'errorCollector'> } |
-    { plugin: 'needHandlerInCatch', options?: Omit<NeedHandlerInCatchOptions, 'errorCollector'> } |
-    { plugin: 'dangerousInitState', options?: Omit<DangerousInitStateOptions, 'errorCollector'> } |
-    { plugin: 'dangerousDefaultValue', options?: Omit<DangerousDefaultValueOptions, 'errorCollector'> }
-
+import CliErrorCollector from './cliErrorCollector';
+import { ScanPluginsConf, pluginsMap } from '../plugins'
+import Runner from '../runner/runner';
 
 export interface IScannerConfig {
     /**
@@ -43,15 +30,7 @@ export interface IScannerConfig {
     fileEncoding?: BufferEncoding;
 }
 
-const pluginsMap = {
-    needTryCatch,
-    dangerousAndOperator,
-    needHandlerInCatch,
-    dangerousInitState,
-    dangerousDefaultValue
-}
-
-export default class Runner {
+export default class RunnerForCli {
     constructor (scannerConfig?: IScannerConfig, debug?: boolean) {
         this._config = scannerConfig;
         this._debug = debug;
@@ -59,7 +38,7 @@ export default class Runner {
 
     private _config: IScannerConfig;
     private _fileMeta: FileResult;
-    private _errorCollector: ErrorCollector;
+    private _errorCollector: CliErrorCollector;
     private _debug: boolean;
     private _bar: InstanceType<typeof ProgressBar>
 
@@ -69,7 +48,7 @@ export default class Runner {
         this._fileMeta = fileSearcher.run()
     }
 
-    private _getBabelPluginsConf (plugins: ScanPluginsConf[], errorCollector: ErrorCollector) {
+    private _getScanPluginsConf (plugins: ScanPluginsConf[], errorCollector: CliErrorCollector) {
         return plugins.map(({ plugin, options }) => {
             if(!pluginsMap[plugin]) {
                 console.log(
@@ -108,10 +87,9 @@ export default class Runner {
             return
         }
 
-        this._errorCollector = new ErrorCollector()
+        this._errorCollector = new CliErrorCollector()
+        const scanPluginsConf = this._getScanPluginsConf(scanPlugins, this._errorCollector)
 
-        const scanPluginsConf = this._getBabelPluginsConf(scanPlugins, this._errorCollector)
-    
         if(!scanPluginsConf?.length) {
             console.log(
                 chalk.redBright('Error: '),
@@ -120,27 +98,20 @@ export default class Runner {
             return
         }
 
+        const runner = new Runner()        
+
         this._fileMeta.forEach(({path, parsePlugins}) => {
             const fileContent = readFileSync(path, {
                 encoding: fileEncoding ?? 'utf8',
             });
             this._bar.tick()
-            transformSync(fileContent, {
-                plugins: scanPluginsConf,
-                parserOpts: {
-                    sourceType: 'unambiguous',
-                    plugins: Array.from(new Set([
-                        ...parsePlugins,
-                        "decorators-legacy",
-                        "decoratorAutoAccessors",
-                        ...babelParsePlugins,
-                    ])) 
-                },
-                code: false,
-                comments: false,
-                filename: path,
-                sourceFileName: path,
-            });
+            runner.updateConfig({
+                code: fileContent,
+                scanPluginsConf,
+                babelParsePlugins: [...parsePlugins, ...babelParsePlugins],
+                filePath: path
+            })
+            runner.run()
         })
 
         console.log(chalk.green.bold('Scanner run finished!'));
