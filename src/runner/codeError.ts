@@ -1,12 +1,13 @@
-import t from '@babel/types'
+import * as t from '@babel/types'
 
-export interface ErrorCollector {
+export interface IErrorCollector {
     collect: (node: t.Node, filePath: string, code: string, errorType: ErrorType, extraMsg?: string) => any
 }
 
 export interface CodeError {
     filePath: string;
     loc: t.SourceLocation;
+    range: [number, number]
     pluginTips: string;
     codeFrameErrMsg?: string;
     extraMsg?: string 

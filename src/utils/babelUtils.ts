@@ -59,7 +59,6 @@ export function isReactHookCallExpression (node: t.CallExpression, scope: Scope,
             && t.isImportDeclaration(binding.path.parent)
         ) {
             const importPath = binding.path.parent.source.value;
-            console.log(importPath, 'aaa');
             if(importPath === reactImportPath && hookName.startsWith('use')) {
                 return hookName
             }

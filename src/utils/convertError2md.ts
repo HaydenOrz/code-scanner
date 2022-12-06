@@ -29,12 +29,12 @@ export function outPutMarkdown (codeError?: Map<CodeError, ErrorType> ) {
 
     codeError.forEach((errorType, error) => {
         const { filePath, codeFrameErrMsg, loc, pluginTips, extraMsg } = error;
-        const errorLocation = `${filePath}(${loc.end.line}, ${loc.end.column + 1})`;
+        const errorLocation = `${filePath}`;
         scanResultsMap[errorType].push(
             { h2: path.basename(filePath) },
-            // { link: { title: path.basename(filePath), source: `file:${errorLocation}` }},
+            { link: { title: path.basename(filePath), source: `file://${errorLocation}` }},
             { ul: [
-                    `file: ${errorLocation}`,
+                    `location: line:${loc.end.line}, column: ${loc.end.column + 1}`,
                     `description: ${pluginTips}`,
                     `detail: ${extraMsg ?? '--'}`
                 ]

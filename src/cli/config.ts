@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path  from 'path'
 import chalk from 'chalk'
-import { IScannerConfig } from './cliRunner'
+import { ICliScannerConfig } from './cliRunner'
 import { logDebugInfo } from '../utils/debug'
 
 import './public/scanner.config.template.json'
@@ -27,13 +27,13 @@ export function getConfig(_configFilePath: string, includes: string, ignore: str
 
     if(ext!=='.json') {
         console.log(
-            chalk.red(`Error:`), 
+            chalk.red(`Error:`),
             chalk.gray( `${configFilePath} is not a json file`)
         )
         process.exit()
     }
 
-    const configInFile: IScannerConfig = require(configFilePath);
+    const configInFile: ICliScannerConfig = require(configFilePath);
     if (includes) { 
         configInFile.includes = includes; 
     }

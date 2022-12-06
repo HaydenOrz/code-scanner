@@ -7,7 +7,7 @@
         "url": "https://github.com/HaydenOrz/code-scanner"
     },
     "author": "Hayden",
-    "main": "./lib/cli/index.js",
+    "main": "./lib/index.js",
     "files": [
         "lib/*"
     ],
@@ -22,7 +22,7 @@
     ],
     "license": "MIT",
     "scripts": {
-        "dev": "tsc -w --sourceMap --outDir dist",
+        "dev": "rm -rf ./dist/** && tsc -w --sourceMap --outDir dist",
         "compile": "rm -rf ./lib/** && tsc",
         "prepare": "husky install",
         "release": "npm run compile && node ./scripts/release.js"

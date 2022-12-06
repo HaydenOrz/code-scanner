@@ -1,11 +1,11 @@
 import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
 import { isReactClassComponentDeclaration } from '../utils/babelUtils'
-import { ErrorType, ErrorCollector } from '../runner/codeError'
+import { ErrorType, IErrorCollector } from '../runner/codeError'
 
 export interface NeedHandlerInCatchOptions {
     reactImportPath?: string;
-    errorCollector: ErrorCollector;
+    errorCollector: IErrorCollector;
 }
 
 const needHandlerInCatch = declare((api, options: NeedHandlerInCatchOptions) => {

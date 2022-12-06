@@ -2,14 +2,14 @@
 import { Command } from 'commander'
 import chalk from 'chalk';
 import { generateDefaultConfigFile, getConfig } from './config'
-import RunnerForCli from "./cliRunner";
+import CliRunner from "./cliRunner";
 import { logDebugInfo } from '../utils/debug'
 
 const version = require('../../package.json').version
 const defaultConfigFilePath = `${process.cwd()}/scanner.config.json`
 
 const program = new Command();
-const runner = new RunnerForCli()
+const cliRunner = new CliRunner()
 
 program
     .name('code-scanner')
@@ -24,19 +24,19 @@ program
     .action((argument, options) => {
         const config = getConfig(options.config, argument, options.ignore, options.debug);
         if(options.debug) {
-            runner.setDebugMode()
+            cliRunner.setDebugMode()
             logDebugInfo('Scanner config is:', config)
         }
-        runner.setConfig(config)
-        runner.run()
+        cliRunner.setConfig(config)
+        cliRunner.run()
         if(options.markdown) {
-            runner.getErrorCollector().outPutMarkdown()
-            console.log(chalk.cyanBright('The results have been output to .scanner/'));
+            cliRunner.getErrorCollector().outPutMarkdown()
+            console.log(chalk.white('The results have been output to .scanner/'));
         }
         if(!options.noconsole) {
-            runner.getErrorCollector().printCodeErrors()
+            cliRunner.getErrorCollector().printCodeErrors()
         }
-        runner.getErrorCollector().printSummary()
+        cliRunner.getErrorCollector().printSummary()
     })
 
 program.command('init')

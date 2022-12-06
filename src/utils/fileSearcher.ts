@@ -1,7 +1,7 @@
 import fastGlob from "fast-glob";
 import { normalize, extname } from 'path';
 import type { ParserPlugin } from '@babel/parser';
-import { logDebugInfo } from '../utils/debug'
+import { logDebugInfo } from './debug'
 
 export enum EXTENSION_TYPE {
     JS = '.js',

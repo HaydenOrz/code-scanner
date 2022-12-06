@@ -1,10 +1,10 @@
 import * as t from '@babel/types'
 import { codeFrameColumns } from '@babel/code-frame'
 import chalk from 'chalk';
-import { outPutMarkdown } from './convertError2md'
-import { CodeError, ErrorType, pluginTipsMap, ErrorCollector } from '../runner/codeError'
+import { outPutMarkdown } from '../utils/convertError2md'
+import { CodeError, ErrorType, pluginTipsMap, IErrorCollector } from './codeError'
 
-export default class CliErrorCollector implements ErrorCollector {
+export default class ErrorCollector implements IErrorCollector {
 
     private _errorPool: Map<CodeError, ErrorType> = new Map<CodeError, ErrorType>()
 
@@ -20,7 +20,8 @@ export default class CliErrorCollector implements ErrorCollector {
             codeFrameErrMsg,
             loc: node.loc,
             pluginTips,
-            extraMsg
+            extraMsg,
+            range: [node.start?? 0, node.end ?? 0]
         }
     }
 
@@ -29,7 +30,7 @@ export default class CliErrorCollector implements ErrorCollector {
     }
 
     collect = (node: t.Node, filePath: string, code: string, errorType: ErrorType, extraMsg?: string) => {
-        const codeError = CliErrorCollector.buildCodeError(node, filePath, code, errorType, extraMsg)
+        const codeError = ErrorCollector.buildCodeError(node, filePath, code, errorType, extraMsg)
         this.saveCodeErrors(codeError, errorType)
     }
 
@@ -37,7 +38,7 @@ export default class CliErrorCollector implements ErrorCollector {
         return this._errorPool
     }
 
-    clearCodeErrors = () => {
+    clearAll = () => {
         this._errorPool.clear()
     }
 

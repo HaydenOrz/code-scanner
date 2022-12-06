@@ -1,10 +1,10 @@
 import * as t from '@babel/types'
 import type { NodePath } from '@babel/core'
 import { declare } from '@babel/helper-plugin-utils';
-import { ErrorType, ErrorCollector } from '../runner/codeError'
+import { ErrorType, IErrorCollector } from '../runner/codeError'
 
 export interface NeedTryCatchOptions {
-    errorCollector: ErrorCollector
+    errorCollector: IErrorCollector
 }
 
 const isBoundary = (path: NodePath<t.Node>) => {

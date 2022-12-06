@@ -1,9 +1,9 @@
 import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
-import { ErrorType, ErrorCollector } from '../runner/codeError'
+import { ErrorType, IErrorCollector } from '../runner/codeError'
 
 export interface DangerousAndOperatorOptions {
-    errorCollector: ErrorCollector;
+    errorCollector: IErrorCollector;
 }
 
 function getRootIdentifierOfMemberExpression(node: t.MemberExpression): t.Identifier {

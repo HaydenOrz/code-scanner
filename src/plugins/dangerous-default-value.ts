@@ -1,9 +1,9 @@
 import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
-import { ErrorType, ErrorCollector } from '../runner/codeError'
+import { ErrorType, IErrorCollector } from '../runner/codeError'
 
 export interface DangerousDefaultValueOptions {
-    errorCollector: ErrorCollector;
+    errorCollector: IErrorCollector;
 }
 
 const dangerousDefaultValue = declare((api, options: DangerousDefaultValueOptions) => {

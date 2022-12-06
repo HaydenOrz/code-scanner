@@ -2,12 +2,12 @@ import type { ParserPlugin } from '@babel/parser';
 import { readFileSync } from 'fs';
 import chalk from 'chalk'
 import ProgressBar from 'progress'
-import FileSearcher, { Includes, Excludes, FileResult } from './fileSearcher';
-import CliErrorCollector from './cliErrorCollector';
-import { ScanPluginsConf, pluginsMap } from '../plugins'
-import Runner from '../runner/runner';
+import FileSearcher, { Includes, Excludes, FileResult } from '../utils/fileSearcher';
+import ErrorCollector from '../runner/errorCollector';
+import { ScanPluginsConf } from '../plugins'
+import Scanner from '../runner';
 
-export interface IScannerConfig {
+export interface ICliScannerConfig {
     /**
      * The files you want to scan
      */
@@ -31,14 +31,14 @@ export interface IScannerConfig {
 }
 
 export default class RunnerForCli {
-    constructor (scannerConfig?: IScannerConfig, debug?: boolean) {
+    constructor (scannerConfig?: ICliScannerConfig, debug?: boolean) {
         this._config = scannerConfig;
         this._debug = debug;
     }
 
-    private _config: IScannerConfig;
+    private _config: ICliScannerConfig;
     private _fileMeta: FileResult;
-    private _errorCollector: CliErrorCollector;
+    private _errorCollector: ErrorCollector;
     private _debug: boolean;
     private _bar: InstanceType<typeof ProgressBar>
 
@@ -46,23 +46,6 @@ export default class RunnerForCli {
         const { includes, excludes } = this._config
         const fileSearcher = new FileSearcher(includes, excludes, this._debug)
         this._fileMeta = fileSearcher.run()
-    }
-
-    private _getScanPluginsConf (plugins: ScanPluginsConf[], errorCollector: CliErrorCollector) {
-        return plugins.map(({ plugin, options }) => {
-            if(!pluginsMap[plugin]) {
-                console.log(
-                    chalk.redBright('Error: '),
-                    chalk.gray(`Plugin ${plugin} is not found! Please check your config! \n `)
-                );
-                return null
-            }
-            const pluginOptions = {
-                ...options,
-                errorCollector
-            }
-            return [pluginsMap[plugin], pluginOptions]
-        }).filter(Boolean)
     }
 
     private _initProcessBar = () => {
@@ -87,8 +70,8 @@ export default class RunnerForCli {
             return
         }
 
-        this._errorCollector = new CliErrorCollector()
-        const scanPluginsConf = this._getScanPluginsConf(scanPlugins, this._errorCollector)
+        this._errorCollector = new ErrorCollector()
+        const scanPluginsConf = Scanner.genScanPluginsConf(scanPlugins, this._errorCollector)
 
         if(!scanPluginsConf?.length) {
             console.log(
@@ -98,27 +81,27 @@ export default class RunnerForCli {
             return
         }
 
-        const runner = new Runner()        
+        const scanner = new Scanner()        
 
         this._fileMeta.forEach(({path, parsePlugins}) => {
             const fileContent = readFileSync(path, {
                 encoding: fileEncoding ?? 'utf8',
             });
             this._bar.tick()
-            runner.updateConfig({
+            scanner.setConfig({
                 code: fileContent,
                 scanPluginsConf,
                 babelParsePlugins: [...parsePlugins, ...babelParsePlugins],
                 filePath: path
             })
-            runner.run()
+            scanner.run()
         })
 
         console.log(chalk.green.bold('Scanner run finished!'));
         this._bar.terminate();
     }
 
-    setConfig = (config: IScannerConfig) => {
+    setConfig = (config: ICliScannerConfig) => {
         this._config = config;
     }
 
