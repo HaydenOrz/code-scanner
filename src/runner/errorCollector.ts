@@ -1,14 +1,24 @@
-import * as t from '@babel/types'
 import { codeFrameColumns } from '@babel/code-frame'
 import chalk from 'chalk';
 import { outPutMarkdown } from '../utils/convertError2md'
-import { CodeError, ErrorType, pluginTipsMap, IErrorCollector } from './codeError'
+import { CodeError, ErrorType, pluginTipsMap, IErrorCollector, CodeInfo, ErrorInfo, ErrorLevel } from './codeError'
+
+const tipsColorMap = {
+    [ErrorLevel.error]: 'redBright',
+    error: 'redBright',
+    [ErrorLevel.warning]: 'yellowBright',
+    warning: 'yellowBright',
+    [ErrorLevel.hint]: 'blue',
+    hint: 'blue',
+}
 
 export default class ErrorCollector implements IErrorCollector {
 
     private _errorPool: Map<CodeError, ErrorType> = new Map<CodeError, ErrorType>()
 
-    static buildCodeError (node: t.Node, filePath: string, code: string, errorType: ErrorType, extraMsg?: string,): CodeError {
+    static buildCodeError (codeInfo: CodeInfo, errorInfo: ErrorInfo): CodeError {
+        const { code, node, filePath } = codeInfo;
+        const { errorType, errorLevel, extraMsg } = errorInfo;
         const codeFrameErrMsg = codeFrameColumns(
             code,
             { start: node.loc.start, end: node.loc.end },
@@ -21,7 +31,8 @@ export default class ErrorCollector implements IErrorCollector {
             loc: node.loc,
             pluginTips,
             extraMsg,
-            range: [node.start?? 0, node.end ?? 0]
+            range: [node.start?? 0, node.end ?? 0],
+            errorLevel,
         }
     }
 
@@ -29,9 +40,9 @@ export default class ErrorCollector implements IErrorCollector {
         this._errorPool.set(codeError, errorType)
     }
 
-    collect = (node: t.Node, filePath: string, code: string, errorType: ErrorType, extraMsg?: string) => {
-        const codeError = ErrorCollector.buildCodeError(node, filePath, code, errorType, extraMsg)
-        this.saveCodeErrors(codeError, errorType)
+    collect = (codeInfo: CodeInfo, errorInfo: ErrorInfo) => {
+        const codeError = ErrorCollector.buildCodeError(codeInfo, errorInfo)
+        this.saveCodeErrors(codeError, errorInfo.errorType)
     }
 
     getCodeErrors = () => {
@@ -43,42 +54,61 @@ export default class ErrorCollector implements IErrorCollector {
     }
 
     printCodeErrors = () => {
-        this._errorPool.forEach((type, { pluginTips, filePath, loc, codeFrameErrMsg, extraMsg }) => {
+        this._errorPool.forEach((type, { pluginTips, filePath, loc, codeFrameErrMsg, extraMsg, errorLevel }) => {
+            const pathLog = chalk.cyan(`${filePath}(${loc.end.line}, ${loc.end.column + 1})`);
+            const tipsLog = chalk[tipsColorMap[errorLevel]](`\n${ErrorLevel[errorLevel]}: ${pluginTips}`)
+            const extraMsgLog = extraMsg ? chalk.yellow('\n' + extraMsg) : ''
             console.log(
-                chalk.cyan(filePath),
-                chalk.yellow(`(${loc.end.line}, ${loc.end.column + 1})`),
-                chalk.redBright('Error:'),
-                chalk.gray(pluginTips),
-                extraMsg ? chalk.yellow('\n' + extraMsg) : ''
+                pathLog,
+                tipsLog,
+                extraMsgLog
             )
             console.log(codeFrameErrMsg);
             console.log('\n');
         })
     }
 
-    printSummary = () => {
+    printSummary = (print: boolean = true) => {
         const errors = Array.from(this._errorPool.entries()) 
-        const allCount = errors.length;
-        const allTypes = Array.from(new Set(errors))
-        const pluginSummary = allTypes.reduce((prev, cur) => {
-            const [ _error, type ] = cur
-            if(prev[type]) {
-                prev[type].count += 1
+        const total = errors.length;
+
+        const pluginSummary = errors.reduce((prev, cur) => {
+            const [ error, type ] = cur
+            const level = error.errorLevel;
+            if(prev[ErrorType[type]]) {
+                prev[ErrorType[type]].count += 1
             } else {
-                prev[type] = {
+                prev[ErrorType[type]] = {
                     type,
+                    level,
                     count: 1
                 }
             }
             return prev
-        },{} as { [key: string]: { type: ErrorType, count: number } } )
+        },{} as { [key: string]: { type: ErrorType, count: number, level: ErrorLevel } } )
 
-        let summary = chalk.yellow("total: ") + chalk.redBright(`${allCount} `) + chalk.white("errors") + "\n"
-        summary += chalk.white('---------------------------------------\n')
-        Object.values(pluginSummary).forEach(({type, count}) => {
-            summary += chalk.cyanBright(`${ErrorType[type]} `)+ chalk.gray("plugin: ") + chalk.redBright(`${count} `) + chalk.gray("errors") +"\n"
-        })
-        console.log(summary)
+        if(print) {
+            let totalLog = chalk.bold(`total: ${total}\n`);
+            const levelCountMap = errors.reduce((prev, cur) => {
+                if(prev[cur[0].errorLevel]) {
+                    prev[cur[0].errorLevel] += 1
+                } else {
+                    prev[cur[0].errorLevel] = 1
+                }
+                return prev
+            }, {} as {
+                [key in ErrorLevel]: number
+            });
+            ([ ErrorLevel.error, ErrorLevel.warning, ErrorLevel.hint ]).forEach(lv => {
+                totalLog += `${levelCountMap[lv]} ${chalk[tipsColorMap[lv]](ErrorLevel[lv]+'s')}, `
+            });
+            let pluginLog = chalk.white('\n============= plugin results =============\n');
+            Object.values(pluginSummary).forEach(({type, count, level}) => {
+                pluginLog += chalk.cyanBright(`${ErrorType[type]}`)+ chalk.gray(" -> ") + count + chalk[tipsColorMap[level]](` ${ErrorLevel[level]}`) +"\n"
+            })
+            console.log(totalLog + pluginLog)
+        }
+        return pluginSummary
     }
 
     outPutMarkdown = () => {

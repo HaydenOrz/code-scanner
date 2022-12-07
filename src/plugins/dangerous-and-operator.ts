@@ -1,9 +1,9 @@
 import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
-import { ErrorType, IErrorCollector } from '../runner/codeError'
+import { ErrorType } from '../runner/codeError'
+import type { BasePluginOptions } from './const'
 
-export interface DangerousAndOperatorOptions {
-    errorCollector: IErrorCollector;
+export interface DangerousAndOperatorOptions extends BasePluginOptions {
 }
 
 function getRootIdentifierOfMemberExpression(node: t.MemberExpression): t.Identifier {
@@ -32,7 +32,7 @@ const dangerousAndOperator = declare((api, options: DangerousAndOperatorOptions)
             LogicalExpression(path, state) {
                 const parentNode = path.parent
                 const node = path.node
-                const { errorCollector } = options
+                const { errorCollector, level } = options
                 let flag = false;
                 if (node.operator !== '&&') return 
                 if (t.isObjectProperty(parentNode)
@@ -62,7 +62,14 @@ const dangerousAndOperator = declare((api, options: DangerousAndOperatorOptions)
                     }
                 }
                 if (flag) {
-                    errorCollector.collect(node, state.filename, state.file.code, ErrorType.dangerousAndOperator)
+                    errorCollector.collect({
+                        node,
+                        filePath: state.filename,
+                        code: state.file.code,
+                    }, {
+                        errorType: ErrorType.dangerousAndOperator,
+                        errorLevel: level,
+                    })
                 }
             },
         },

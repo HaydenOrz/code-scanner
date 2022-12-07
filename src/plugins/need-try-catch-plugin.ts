@@ -1,10 +1,10 @@
 import * as t from '@babel/types'
 import type { NodePath } from '@babel/core'
 import { declare } from '@babel/helper-plugin-utils';
-import { ErrorType, IErrorCollector } from '../runner/codeError'
+import { ErrorType } from '../runner/codeError'
+import type { BasePluginOptions } from './const'
 
-export interface NeedTryCatchOptions {
-    errorCollector: IErrorCollector
+export interface NeedTryCatchOptions extends BasePluginOptions {
 }
 
 const isBoundary = (path: NodePath<t.Node>) => {
@@ -35,12 +35,19 @@ const needTryCatch = declare((api, options: NeedTryCatchOptions, dirname) => {
     return {
         visitor: {
             CallExpression(path, state) {
-                const { errorCollector } = options
+                const { errorCollector, level } = options
                 const { node } = path
                 if ( t.isMemberExpression(node.callee) && t.isIdentifier(node.callee.object) && t.isIdentifier(node.callee.property) ) {
                     if (node.callee.object.name === 'JSON' && node.callee.property.name === 'parse') {
                         if(!hasErrorCapture(path)) {
-                            errorCollector.collect(node, state.filename, state.file.code, ErrorType.needTryCatch)
+                            errorCollector.collect({
+                                node,
+                                filePath: state.filename,
+                                code: state.file.code,
+                            }, {
+                                errorType: ErrorType.needTryCatch,
+                                errorLevel: level
+                            })
                         }
                     }
                 }

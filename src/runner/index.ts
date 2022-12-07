@@ -1,8 +1,8 @@
 import { transformSync } from '@babel/core';
 import type { ParserPlugin } from '@babel/parser';
 import type { PluginItem  } from '@babel/core';
-import { ScanPluginsConf, pluginsMap } from '../plugins'
-import { IErrorCollector } from './codeError'
+import { ScanPluginsConf, pluginsMap } from '../plugins';
+import { IErrorCollector, getErrorLevel  } from './codeError';
 
 export interface IScannerConf {
     code?: string;
@@ -25,6 +25,7 @@ export default class Scanner {
                 ...options,
                 errorCollector
             }
+            pluginOptions.level = getErrorLevel(pluginOptions.level);
             return [pluginsMap[plugin], pluginOptions]
         }).filter(Boolean)
     }

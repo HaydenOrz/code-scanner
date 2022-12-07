@@ -2,11 +2,11 @@ import * as t from '@babel/types'
 import { declare } from '@babel/helper-plugin-utils';
 import type { Scope } from '@babel/traverse'
 import { isReactClassComponentDeclaration } from '../utils/babelUtils'
-import { ErrorType, IErrorCollector } from '../runner/codeError'
+import { ErrorType } from '../runner/codeError'
+import type { BasePluginOptions } from './const'
 
-export interface DangerousInitStateOptions {
+export interface DangerousInitStateOptions extends BasePluginOptions {
     reactImportPath?: string;
-    errorCollector: IErrorCollector;
 }
 
 interface ShouldCheckIdentifier {
@@ -134,9 +134,10 @@ const dangerousInitState = declare((api, options: DangerousInitStateOptions) => 
         visitor: {
             // class state
             ClassProperty(path, state) {
-                const node = path.node
-                const reactImportPath = options.reactImportPath ?? 'react'
-                const errorCollector = options.errorCollector
+                const node = path.node;
+                const reactImportPath = options.reactImportPath ?? 'react';
+                const errorCollector = options.errorCollector;
+                const level = options.level;
 
                 if ((t.isIdentifier(node.key) && node.key.name === 'state' && !node.static)) {
                     if(t.isClassBody(path.parentPath) && t.isClassDeclaration(path.parentPath.parent)) {
@@ -161,7 +162,15 @@ const dangerousInitState = declare((api, options: DangerousInitStateOptions) => 
                                 })
                                 .filter(Boolean)
 
-                            suspectedIdentifiers.length && errorCollector.collect(node, state.filename, state.file.code, ErrorType.dangerousInitState, generateErrMsgWithSuspectedList(suspectedIdentifiers))
+                            suspectedIdentifiers.length && errorCollector.collect({
+                                node,
+                                filePath: state.filename,
+                                code: state.file.code,
+                            }, {
+                                errorType: ErrorType.dangerousInitState,
+                                errorLevel: level,
+                                extraMsg: generateErrMsgWithSuspectedList(suspectedIdentifiers),
+                            })
                         }
                     }
                 }
